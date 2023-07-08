@@ -50,7 +50,7 @@
 
 *■当多个用户请求一个JSP页面时，Tomcat服务器为每个用户启动一个线程，该线程负责执行字节码文件响应用户的请求。Tomcat服务器使用多线程来处理程序片.*
 
-<img src="img/图片1.png" style="zoom:150%;" />
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090054307.png" style="zoom:150%;" />
 
 
 
@@ -280,9 +280,9 @@
 </html>
 ```
 
-![](img/屏幕截图 2022-09-15 172600.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090055313.png)
 
-![](img/屏幕截图 2022-09-15 172634.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090055927.png)
 
 ------
 
@@ -383,7 +383,7 @@ include 动作标记语法格式为：
 
 ```
 
-![](img/屏幕截图 2022-09-15 173059.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090055275.png)
 
 ---
 
@@ -482,9 +482,9 @@ include 动作标记语法格式为：
 </html>
 ```
 
-![](img/屏幕截图 2022-09-15 173427.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090055468.png)
 
-![](img/屏幕截图 2022-09-15 173452.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090055376.png)
 
 ---
 
@@ -595,7 +595,7 @@ taglib指令的格式如下：
 </p>
 ```
 
-![](img/屏幕截图 2022-09-20 173340.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090055882.png)
 
 ---
 
@@ -730,7 +730,7 @@ JSP页面使用Tag标记向所调用的Tag文件中name指定的对象传递一�
 %>
 ```
 
-![](img/屏幕截图 2022-09-21 153415.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090055165.png)
 
 ---
 
@@ -824,7 +824,7 @@ jspContext.setAttribute("对象的名字",对象的引用)
 %>
 ```
 
-![](img/屏幕截图 2022-09-21 160434.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090056837.png)
 
 ---
 
@@ -920,9 +920,9 @@ request对象获取用户提交信息的最常用的方法是 **getParameter(Str
 </html>
 ```
 
-![](img/屏幕截图 2022-10-01 174850.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090056108.png)
 
-![](img/屏幕截图 2022-10-01 174918.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090056210.png)
 
 ---
 
@@ -985,7 +985,7 @@ request.setCharacterEncoding("utf-8");
 </html>
 ```
 
-![](img/屏幕截图 2022-10-02 170545.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090056983.png)
 
 ---
 
@@ -1038,7 +1038,7 @@ request的getParameter方法获取form表单提交的有关信息，但实际上
 </html>
 ```
 
-![](img/屏幕截图 2022-10-02 171012.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090056249.png)
 
 ---
 
@@ -1323,11 +1323,11 @@ String idStr = request.getParameter("id");
 </html>
 ```
 
-![](img/屏幕截图 2022-10-07 231317.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090056369.png)
 
-![](img/屏幕截图 2022-10-07 231336.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090056550.png)
 
-![](img/屏幕截图 2022-10-07 231349.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090056860.png)
 
 ---
 
@@ -1373,9 +1373,9 @@ response对象可以使用方法**addHeader(String  head,String value)**;
 </html>
 ```
 
-![](img/屏幕截图 2022-10-07 232813.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090056207.png)
 
-![](img/屏幕截图 2022-10-07 232822.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090056766.png)
 
 ---
 
@@ -1451,9 +1451,9 @@ response对象可以使用方法**addHeader(String  head,String value)**;
 </html>
 ```
 
-![](img/屏幕截图 2022-10-08 210307.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057087.png)
 
-![](img/屏幕截图 2022-10-08 210336.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057978.png)
 
 ---
 
@@ -1546,9 +1546,9 @@ HTTP协议是一种无状态协议。一个用户向服务器发出请求（requ
 </html>
 ```
 
-![](img/屏幕截图 2022-10-08 211345.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057287.png)
 
-![](img/屏幕截图 2022-10-08 211358.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057239.png)
 
 ---
 
@@ -1717,13 +1717,13 @@ String str=response.encodeRedirectURL("example4_13_b.jsp");
 
 ```
 
-![](img/屏幕截图 2022-10-08 213140.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057034.png)
 
-![](img/屏幕截图 2022-10-08 213200.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057504.png)
 
-![](img/屏幕截图 2022-10-08 213210.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057300.png)
 
-![](img/屏幕截图 2022-10-08 213706.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057212.png)
 
 ----
 
@@ -1871,7 +1871,7 @@ JSP页面可以将数据的处理过程指派给一个或几个bean来完成，�
 
      ■Tomcat服务器为访问Web服务目录的所有用户分配一个共享的bean，即不同用户的application bean也都是相同的一个。也就是说，**<u>任何一个用户对自己application bean的属性的改变，都会影响到其他的用户</u>**（不同Web服务目录的application bean互不相同）。
 
-​		![](img/屏幕截图 2022-10-18 215536.png)
+​		![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057629.png)
 
 
 
@@ -2030,11 +2030,11 @@ public class Goods {
 </html>
 ```
 
-![](img/屏幕截图 2022-10-19 103733.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057483.png)
 
-![](img/屏幕截图 2022-10-19 103751.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057985.png)
 
-![](img/屏幕截图 2022-10-19 103824.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057773.png)
 
 ---
 
@@ -2137,7 +2137,7 @@ public class ListFile {
 </html>
 ```
 
-![](img/屏幕截图 2022-10-19 110050.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090058019.png)
 
 ---
 
@@ -2494,7 +2494,7 @@ HttpSession session=request.getSession(true);
 
 ■ 控制器（Controller） 一个或多个<u>servlet对象</u>，根据视图提交的要求进行数据处理操作，并将有关的结果存储到Javabean中，然后servlet使用转发或重定向的方式请求视图中的某个JSP页面显示数据。比如让某个JSP页面通过使用Javabean标记、Java程序片或Java表达式显示控制器存储在Javabean中的数据。
 
-![](img/屏幕截图 2022-11-09 171048.png)
+![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090058098.png)
 
 ​        
 
