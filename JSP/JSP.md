@@ -50,9 +50,9 @@
 
 *■当多个用户请求一个JSP页面时，Tomcat服务器为每个用户启动一个线程，该线程负责执行字节码文件响应用户的请求。Tomcat服务器使用多线程来处理程序片.*
 
-<img src="img/图片1.png" style="zoom:150%;" />
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/JSP/img/202307081818258.png?token=AZJF7DAGITUZPWHZLPACWGTEVE4EK" style="zoom:150%;" />
 
-![](https://raw.githubusercontent.com/dafansu/Note/main/JSP/img/202307081707853.jpg?token=AZJF7DGFWK7JTUVYIJSC7Z3EVETYO)
+
 
 
 
