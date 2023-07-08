@@ -7,24 +7,15 @@
 **一个JSP页面由==5种元素==组成**
 
 1) **普通的HTML标记和JavaScript标记。**
-
-2)  **JSP标记，如指令标记、动作标记。**
-
+2) **JSP标记，如指令标记、动作标记。**
 3) **变量和方法的声明。**
-
 4) **Java 程序片。**
-
 5) **Java 表达式**
-
-   
 
 **原理**
 
 - **一个JSP页面被第一次请求执行时，Tomcat服务器首先将JSP页面文件转译成一个Java文件，再将这个Java文件编译生成字节码文件，然后通过执行字节码文件响应用户的请求。**
-
 - **当多个用户请求一个JSP页面时，Tomcat服务器为每个用户启动一个线程，该线程负责执行常驻内存的字节码文件来响应相应用户的请求。这些线程由Tomcat服务器来管理，将CPU的使用权在各个线程之间快速切换，以保证每个线程都有机会执行字节码文件。**
-
-  
 
 ### 1.2 声明变量和定义方法
 
@@ -32,13 +23,11 @@
 
 **在<%!和%>标记符号之间声明变量，定义方法以及定义类。**
 
-**<%!和%>标记符号的内容习惯上放在JSP 页面指令之后，<HTML>之前，也可以写在<HTML>与</HTML>之间。**
+**<%!和%>标记符号的内容习惯上放在JSP 页面指令之后，`<HTML>`之前，也可以写在`<HTML>`与`</HTML>`之间。**
 
 - **<%!和%>之间声明的变量在==整个JSP页面内都有效==，与标记符在JSP页面中所在的书写位置无关，但习惯上把<%!、%> 标记符写在JSP页面的前面。**
 - **对于在“<%!”和“%>”标记符号之间==定义方法，可以在Java程序片中调用该方法==。方法内声明的变量只在该方法内有效，当方法被调用时，方法内声明的变量被分配内存，方法被调用完毕即可释放这些变量所占的内存。**
 - **对于在“<%!”和“%>”标记符号之间==定义类==，可以==在Java程序片中使用该类创建对象==**
-
-
 
 ### 1.3 Java 程序片
 
@@ -46,26 +35,22 @@
 
 - **可以在<%和%>之间插入Java 程序片。**
 - **一个JSP页面==可以有许多程序片==，这些程序片将被Tomcat服务器按顺序执行。**
-- **在程序片中声明的变量称作JSP页面的==局部变量==。局部变量的有效范围与其声明的位置有关，即局部变量<u>在JSP页面后继的所有程序片以及表达式部分内都有效</u>。**
+- **在程序片中声明的变量称作JSP页面的==局部变量==。局部变量的有效范围与其声明的位置有关，即局部变量`<u>`在JSP页面后继的所有程序片以及表达式部分内都有效`</u>`。**
 
 *■当多个用户请求一个JSP页面时，Tomcat服务器为每个用户启动一个线程，该线程负责执行字节码文件响应用户的请求。Tomcat服务器使用多线程来处理程序片.*
 
 <img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090054307.png" style="zoom:150%;" />
 
-
-
 ### 1.4 Java 表达式
 
 **==<%= …  …%>==**
 
-​	**可以在<%=和%>之间插入一个可求值的表达式**（*注意：不可插入语句，<%=是一个完整的符号，“<%”和“=”之间不要有空格*）。
+    **可以在<%=和%>之间插入一个可求值的表达式**（*注意：不可插入语句，<%=是一个完整的符号，“<%”和“=”之间不要有空格*）。
 
 - **表达式的值由服务器负责计算，并将计算结果用字符串形式发送到用户端显示。**
-- **Java表达式可以写在<HTML>之前，也可以写在<HTML>和</HTML>之间或</HTML>之后。**
+- **Java表达式可以写在`<HTML>`之前，也可以写在`<HTML>`和`</HTML>`之间或`</HTML>`之后。**
 
 *●在JSP页面中，表达式的值被表示成一个字符串的形式，即Tomcat服务器将表达式的结果转换成字符串，然后发送给用户的浏览器。因此，在编写JSP页面时，要把Java表达式按普通的文本来使用。*
-
-
 
 ### 1.5 JSP中的注释
 
@@ -75,15 +60,11 @@
 
 *JSP引擎把HTML注释交给用户，因此用户通过浏览器查看JSP页面的源文件时，能够看到HTML注释。*
 
-
-
 ==\<%--注释内容--%>==
 
  **JSP 注释：在标记符号“<%--”和“--%>”之间加入注释内容**
 
 *Tomcat服务器忽略JSP注释，即在编译JSP页面时忽略JSP注释。*
-
-
 
 ### 1.6 JSP 指令标记
 
@@ -124,21 +105,21 @@
 <%@ page contentType="application/msword" %>
 ```
 
--  可以使用page指令为contentType 属性指定的值有：text/html、text/plain、image/gif、 image/x-xbitmap、image/jpeg、image/pjpeg、application/x-shockwave-flash、application/vnd.ms-powerpoint、 application/vnd.ms-excel、application/msword等
+- 可以使用page指令为contentType 属性指定的值有：text/html、text/plain、image/gif、 image/x-xbitmap、image/jpeg、image/pjpeg、application/x-shockwave-flash、application/vnd.ms-powerpoint、 application/vnd.ms-excel、application/msword等
 - page指令只能为contentType指定一个值，==不允许两次使用page指令给contentType属性指定不同的属性值==
--  用page指令为contentType指定一个值的同时，也可以为contentType的附加属性charset指定一个值（默认值是iso-8859-1），例如
+- 用page指令为contentType指定一个值的同时，也可以为contentType的附加属性charset指定一个值（默认值是iso-8859-1），例如
 
 ```jsp
 <%@ page contentType="text/html;charset=gb2312" %>
 ```
 
-> ​		contentType的附加属性charset的值是通知用户浏览器用怎样的编码解析收到的字符， 当JSP页面用page指令指定设置charset的值是gb2312时，浏览器会将编码切换成gb2312。但是，如果JSP页面用page指定了JSP的页面本身的编码，例如：<%@ page pageEncoding = "utf-8" %>，那么charset的值和JSP的页面编码保持一致，即也是utf-8（目前的浏览器都支持utf-8编码，所以一般不需要再指定charset的值，使其和JSP的页面编码保持一致即可）
+>     contentType的附加属性charset的值是通知用户浏览器用怎样的编码解析收到的字符， 当JSP页面用page指令指定设置charset的值是gb2312时，浏览器会将编码切换成gb2312。但是，如果JSP页面用page指定了JSP的页面本身的编码，例如：<%@ page pageEncoding = "utf-8" %>，那么charset的值和JSP的页面编码保持一致，即也是utf-8（目前的浏览器都支持utf-8编码，所以一般不需要再指定charset的值，使其和JSP的页面编码保持一致即可）
 
 ##### **（2）pageEncoding 属性**
 
-​		**pageEncoding 属性值是定义 JSP 页面使用的编码，即是告诉Tomcat服务器的解析器用怎样的编码解析JSP中的字符**
-
-​		**只能为pageEncoding指定一个值，不允许两次使用page指令给pageEncoding属性指定不同的或相同的属性值。==默认值是 UTF-8==**
+    **pageEncoding 属性值是定义 JSP 页面使用的编码，即是告诉Tomcat服务器的解析器用怎样的编码解析JSP中的字符**
+    
+    **只能为pageEncoding指定一个值，不允许两次使用page指令给pageEncoding属性指定不同的或相同的属性值。==默认值是 UTF-8==**
 
 ```jsp
 <!--例如-->
@@ -167,10 +148,10 @@
 
  **==JSP页面默认import属性已经有如下的值：==**
 
- - ​	**" java.lang.*"**
- - ​	 **"javax.servlet.*"**
- - ​	**"javax.servlet.jsp.*"**
- - ​	**"javax.servlet.http.*"**
+-     **" java.lang.*"**
+-     **"javax.servlet.*"**
+-     **"javax.servlet.jsp.*"**
+-     **"javax.servlet.http.*"**
 
 ##### （5）session属性
 
@@ -178,7 +159,7 @@
 
 ##### （6）buffer属性
 
-**内置输出流对象out负责将服务器的某些信息或运行结果发送到用户端显示。buffer属性用来指定out设置的缓冲区的大小或不使用缓冲区。==buffer属性的默认值是8kb==** 
+**内置输出流对象out负责将服务器的某些信息或运行结果发送到用户端显示。buffer属性用来指定out设置的缓冲区的大小或不使用缓冲区。==buffer属性的默认值是8kb==**
 
 ```jsp
 <!--例如-->
@@ -212,8 +193,6 @@
 -->
 ```
 
-
-
 #### 1.6.2 include 指令标记
 
 **如果需要在JSP页面内某处整体嵌入一个文件，就可以考虑使用include指令标记，其语法格式如下：**
@@ -227,7 +206,7 @@
 - ==include指令可以实现代码的复用==。比如，每个JSP页面上都可能都需要一个导航条，以便用户在各个JSP页面之间方便地切换，那么每个JSP页面都可以使用include指令在页面的适当位置整体嵌入一个相同的文件。
 - 允许被嵌入的文件使用page指令指定contentType属性的值，但==指定的值要与嵌入该文件的JSP页面中的====page指令指定的contentType属性的值相同==
 
-------
+---
 
 *例子*
 
@@ -284,9 +263,7 @@
 
 ![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090055927.png)
 
-------
-
-
+---
 
 ### 1.7 JSP 动作标记
 
@@ -310,7 +287,7 @@ include 动作标记语法格式为：
 
 **==注意：==当 include 动作标记不需要 param 子标记时，必须使用第一种形式**
 
-> ​		include动作标记告诉JSP页面动态包含一个文件，即JSP页面运行时才将文件加入。与静态嵌入文件的include指令标记不同，当Tomcat服务器根据JSP页面产生成Java文件时，不把JSP页面中动作指令include所包含的文件与原JSP页面合并为一个新的JSP页面，而是告诉Java解释器，这个文件在JSP运行（Java文件的字节码文件被加载执行）时才包含进来。如果包含的文件是普通的文本文件，就将文件的内容发送到用户端，由用户端的浏览器负责显示；如果包含的文件是JSP文件，Tomcat服务器就执行这个文件，然后将执行的结果发送到用户端，并由用户端的浏览器负责显示这些结果。
+>     include动作标记告诉JSP页面动态包含一个文件，即JSP页面运行时才将文件加入。与静态嵌入文件的include指令标记不同，当Tomcat服务器根据JSP页面产生成Java文件时，不把JSP页面中动作指令include所包含的文件与原JSP页面合并为一个新的JSP页面，而是告诉Java解释器，这个文件在JSP运行（Java文件的字节码文件被加载执行）时才包含进来。如果包含的文件是普通的文本文件，就将文件的内容发送到用户端，由用户端的浏览器负责显示；如果包含的文件是JSP文件，Tomcat服务器就执行这个文件，然后将执行的结果发送到用户端，并由用户端的浏览器负责显示这些结果。
 
 #### 1.7.2 param 动作标记
 
@@ -387,8 +364,6 @@ include 动作标记语法格式为：
 
 ---
 
-
-
 #### 1.7.3 forward 动作标记
 
 ```jsp
@@ -403,7 +378,7 @@ include 动作标记语法格式为：
 </jsp:forward>
 ```
 
-> ​		指令的作用是：从该指令处停止当前页面的执行，而转向执行page属性指定的JSP页面。需要注意的是，当前页面使用forward动作标记转向后，尽管用户看到了转向后的页面的效果，但浏览器地址栏中显示的仍然是转向前的JSP页面的URL地址，因此，如果刷新浏览器的显示，将再次执行当前浏览器地址栏中显示的JSP页面。
+>     指令的作用是：从该指令处停止当前页面的执行，而转向执行page属性指定的JSP页面。需要注意的是，当前页面使用forward动作标记转向后，尽管用户看到了转向后的页面的效果，但浏览器地址栏中显示的仍然是转向前的JSP页面的URL地址，因此，如果刷新浏览器的显示，将再次执行当前浏览器地址栏中显示的JSP页面。
 
 ---
 
@@ -423,7 +398,7 @@ include 动作标记语法格式为：
 	<h1>产生一个1~10之间的随机数
 	<%
 		double i = (int)(Math.random()*10)+1;
-		if(i <= 5){		
+		if(i <= 5){	
 	%>		<jsp:forward page="example2_12_a.jsp">
 				<jsp:param value="<%= i %>" name="number"/>
 			</jsp:forward>
@@ -488,8 +463,6 @@ include 动作标记语法格式为：
 
 ---
 
-
-
 ## 2.Tag文件与Tag标记
 
 ---
@@ -513,8 +486,6 @@ Tag文件是扩展名为.tag的文本文件，其结构和JSP文件类似。
 其中的W**EB-INF（字母大写）和tags都是固定的目录名称**，而t**ags下的子目录的名称可由用户给定**
 
 **==一个Tag文件必须保存到tags目录或其下的子目录中==**
-
-
 
 ### 2.2 Tag 标记
 
@@ -546,15 +517,15 @@ taglib指令的格式如下：
 <%@ taglib tagdir="/WEB-INF/tags" prefix="computer"%>
 ```
 
-■引入标记库后，JSP页面就可以使用带前缀的Tag标记调用相应的Tag文件，其中的前缀由<taglib>指令中的prefix属性指定。例如JSP如下使用Tag标记调用相应的Tag文件：
+■引入标记库后，JSP页面就可以使用带前缀的Tag标记调用相应的Tag文件，其中的前缀由`<taglib>`指令中的prefix属性指定。例如JSP如下使用Tag标记调用相应的Tag文件：
 
 ```jsp
 <computer:oddNumberSum />
 ```
 
-> ​	taglib 指令中的p==refix 给出的前缀由用户自定义==，其好处是，通过前缀可以有效地区分不同标记库中具有相同名字的标签文件
+>     taglib 指令中的p==refix 给出的前缀由用户自定义==，其好处是，通过前缀可以有效地区分不同标记库中具有相同名字的标签文件
 >
-> ​	JSP 页面使用 Tag 标记时，冒号：的左右不要有空格
+>     JSP 页面使用 Tag 标记时，冒号：的左右不要有空格
 
 ---
 
@@ -599,8 +570,6 @@ taglib指令的格式如下：
 
 ---
 
-
-
 #### 2.2.3 Tag 标记的运行原理
 
 Tomcat服务器处理JSP页面中的Tag标记的原理如下：
@@ -610,8 +579,6 @@ Tomcat服务器处理JSP页面中的Tag标记的原理如下：
 （2）如果该Tag文件已经被转编译为字节码文件，Tomcat服务器将直接执行这个字节码文件。
 
 （3）如果对Tag文件进行了修改，那么Tomcat服务器会重新将Tag文件转译成一个java文件，并编译这个java文件生成字节码文件，然后执行这个字节码文件。
-
-
 
 ### 2.3 Tag 文件中的常用指令
 
@@ -646,7 +613,7 @@ Tag文件中也有和JSP文件类似的include指令标记，其使用方法和�
 
 一个Tag文件允许使用它的JSP页面向该Tag文件传递数据。在Tag文件中通过使用==attribute指令==让使用它的JSP页面向该Tag文件传递需要的数据。
 
-**数据：xxx.jsp   --->  xxx.tag** 
+**数据：xxx.jsp   --->  xxx.tag**
 
 ```jsp
 <%@ attribute name="对象名字" required="true"|"false" type="对象的类型"%>
@@ -658,9 +625,7 @@ Tag文件中也有和JSP文件类似的include指令标记，其使用方法和�
 
 > 注意：
 >
-> ​		在 Tag 文件中不可以再定义和 attribute 指令中的 name 属性给出的对象具有相同名字的变量，否则将隐藏 attribute 指令中给出的对象，使其失效。
-
-
+>     在 Tag 文件中不可以再定义和 attribute 指令中的 name 属性给出的对象具有相同名字的变量，否则将隐藏 attribute 指令中给出的对象，使其失效。
 
 *例如*
 
@@ -734,13 +699,11 @@ JSP页面使用Tag标记向所调用的Tag文件中name指定的对象传递一�
 
 ---
 
-
-
 #### 2.3.4 variable 指令
 
 Tag文件通过使用==variable指令==可以将Tag文件中的对象返回给调用该Tag文件的JSP页面。
 
-**数据：xxx.tag   --->  xxx.jsp** 
+**数据：xxx.tag   --->  xxx.jsp**
 
 ```jsp
 <%@ variable name-given="对象" variable-class="对象的类型" scope="有效范围"%>
@@ -758,7 +721,7 @@ jspContext.setAttribute("对象的名字",对象的引用)
 
 > 注意：
 >
-> ​	在 JSP 页面中不可以再定义与 Tag 文件返回的对象具有相同名字的变量，否则 Tag文件无法将 variable 指令给出的对象返回给 JSP 页面。
+>     在 JSP 页面中不可以再定义与 Tag 文件返回的对象具有相同名字的变量，否则 Tag文件无法将 variable 指令给出的对象返回给 JSP 页面。
 
 ---
 
@@ -784,7 +747,7 @@ jspContext.setAttribute("对象的名字",对象的引用)
 	菜单：<br>"<%= str %>"<br>价格总和：
 	<%= price %>
 	</p>
-	
+
 	<%
 		str = "毛巾：2.6元，香皂：6.9元，牙刷：12.3元";
 	%>
@@ -828,8 +791,6 @@ jspContext.setAttribute("对象的名字",对象的引用)
 
 ---
 
-
-
 #### 2.3.5 taglib 指令
 
 JSP页面或Tag文件都可以使用taglib指令使用标记库（如前面各个例子所示）
@@ -844,19 +805,17 @@ JSP页面或Tag文件都可以使用taglib指令使用标记库（如前面各�
 
 **数据：xxx.tag   --->  xxx.jsp**  用 variable 指令
 
-
-
 ## 3.JSP 内置对象
 
 ---
 
 ### 3.1 request 对象
 
-​	HTTP通信协议是用户与服务器之间一种提交（请求）信息与响应信息（request/response）的通信协议。
-
-​	在JSP中，内置对象request封装了用户提交的信息，那么该对象调用相应的方法可以获取封装的信息，即使用该对象可以获取用户提交的信息。
-
-​	内置对象request对象是实现了ServletRequest接口类的一个实例，可以在Tomcat服务器的webapps\tomcat-docs\servletapi中查找ServletRequest接口的方法
+    HTTP通信协议是用户与服务器之间一种提交（请求）信息与响应信息（request/response）的通信协议。
+    
+    在JSP中，内置对象request封装了用户提交的信息，那么该对象调用相应的方法可以获取封装的信息，即使用该对象可以获取用户提交的信息。
+    
+    内置对象request对象是实现了ServletRequest接口类的一个实例，可以在Tomcat服务器的webapps\tomcat-docs\servletapi中查找ServletRequest接口的方法
 
 #### 3.1.1 获取用户提交的信息
 
@@ -913,7 +872,7 @@ request对象获取用户提交信息的最常用的方法是 **getParameter(Str
 		out.println("<br>三角形面积（保留2位小数）：" + result);
 	}
 	catch(NumberFormatException ee){
-		out.println("<br>请输入数字字符");		
+		out.println("<br>请输入数字字符");	
 	}
 %>
 </body>
@@ -926,13 +885,9 @@ request对象获取用户提交信息的最常用的方法是 **getParameter(Str
 
 ---
 
-
-
 #### 3.1.2 处理汉字信息
 
-​	用户提交的信息中如果含有汉字字符或其他非ASCII字符的信息，就必须进行特殊的处理方式，防止出乱码现象。
-
-
+    用户提交的信息中如果含有汉字字符或其他非ASCII字符的信息，就必须进行特殊的处理方式，防止出乱码现象。
 
 ● 处理汉字信息
 
@@ -989,8 +944,6 @@ request.setCharacterEncoding("utf-8");
 
 ---
 
-
-
 #### 3.1.3 常用方法举例
 
 request的getParameter方法获取form表单提交的有关信息，但实际上，request对象调用相关方法可以获取请求的许多细节信息。内置对象request常用方法如下：
@@ -1042,18 +995,16 @@ request的getParameter方法获取form表单提交的有关信息，但实际上
 
 ---
 
-
-
 #### 3.1.4 处理HTML标记
 
-1.  form 标记(form表单)
+1. form 标记(form表单)
 
-   ```jsp
+```jsp
    <form  action= "请求访问的页面或servlet"  method = get | post  >
        各种提交手段
        提交键
    </form>
-   ```
+```
 
 2. input标记
 
@@ -1121,7 +1072,6 @@ request的getParameter方法获取form表单提交的有关信息，但实际上
    重置键将表单中输入的数据清空，以便重新输入数据，例如：
    <input type="reset" value="重置"/>
    ```
-
 3. select、option标记（下拉列表或滚动列表）
 
    ```jsp
@@ -1131,7 +1081,6 @@ request的getParameter方法获取form表单提交的有关信息，但实际上
       … …
    </select>
    ```
-
 4. textArea标记
 
    ```jsp
@@ -1139,7 +1088,6 @@ request的getParameter方法获取form表单提交的有关信息，但实际上
      提交或显示的数据
    </textArea>
    ```
-
 5. style样式标记
 
    ```jsp
@@ -1154,7 +1102,6 @@ request的getParameter方法获取form表单提交的有关信息，但实际上
    </style>
    
    ```
-
 6. table标记（主要用于显示数据，不能提交数据）
 
    ```jsp
@@ -1167,14 +1114,12 @@ request的getParameter方法获取form表单提交的有关信息，但实际上
    … ….
    </table>
    ```
-
 7. image标记
 
    ```jsp
    不能用于提交数据，用于显示图像。
    <image  src="图像文件的URL" >描述文字</image>
    ```
-
 8. embed标记
 
    ```jsp
@@ -1204,8 +1149,6 @@ request的getParameter方法获取form表单提交的有关信息，但实际上
 String idStr = request.getParameter("id");
 需要注意的是，超链接标记向所链接的页面传递的参数的值，即字符串中不允许含有非ASCII字符（例如汉字等）。
 ```
-
-
 
 ### 3.2 response 对象
 
@@ -1331,8 +1274,6 @@ String idStr = request.getParameter("id");
 
 ---
 
-
-
 #### 3.2.2 response的HTTP文件头
 
 response对象可以使用方法**addHeader(String  head,String value)**;
@@ -1378,8 +1319,6 @@ response对象可以使用方法**addHeader(String  head,String value)**;
 ![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090056766.png)
 
 ---
-
-
 
 #### 3.2.3 response重定向
 
@@ -1446,7 +1385,7 @@ response对象可以使用方法**addHeader(String  head,String value)**;
 		}
 	%>
 	<b>欢迎<%= name %></b>
-	
+
 </body>
 </html>
 ```
@@ -1456,8 +1395,6 @@ response对象可以使用方法**addHeader(String  head,String value)**;
 ![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057978.png)
 
 ---
-
-
 
 ### 3.3 session对象
 
@@ -1473,7 +1410,7 @@ HTTP协议是一种无状态协议。一个用户向服务器发出请求（requ
 
 ■**当用户再访问该Web服务目录的其它页面时，Tomcat服务器不再分配给用户的新session对象**，而是使用完全相同的一个，直到session对象达到了最大生存时间或用户关闭自己的浏览器或Tomcat服务器关闭，Tomcat服务器将销毁用户的session对象
 
-★简单地说，用户（浏览器）在访问一个Web服务目录期间，服务器为该用户分配一个session对象（称作和该用户的会话），服务器可以在各个页面使用这个session记录当前用户的有关信息。而且服务器保证不同用户的session对象互不相同。 
+★简单地说，用户（浏览器）在访问一个Web服务目录期间，服务器为该用户分配一个session对象（称作和该用户的会话），服务器可以在各个页面使用这个session记录当前用户的有关信息。而且服务器保证不同用户的session对象互不相同。
 
 ==注意 --- 同一个用户在不同的Web服务目录中的session是互不相同的==
 
@@ -1552,8 +1489,6 @@ HTTP协议是一种无状态协议。一个用户向服务器发出请求（requ
 
 ---
 
-
-
 #### 3.3.2 session对象与URL重写
 
 ■session对象能和用户建立起一一对应关系依赖于用户浏览器是否支持Cookie。
@@ -1572,17 +1507,14 @@ String str=response.encodeRedirectURL("example4_13_b.jsp");
 
 ```
 
-
-
 #### 3.3.3 session对象存储数据
 
 1. **public void setAttribute (String  key ,Object  obj)**
 
-   ​		session对象可以调用该方法将参数Object指定的对象obj添加到session对象中，并为添加的对象指定了一个索引关键字，如果添加的两个对象的关键字相同，则先前添加的对象被清除。
-
+       session对象可以调用该方法将参数Object指定的对象obj添加到session对象中，并为添加的对象指定了一个索引关键字，如果添加的两个对象的关键字相同，则先前添加的对象被清除。
 2. **public Object getAttribute(String key)**
 
-   ​		获取session对象索引关键字是key的对象。由于任何对象都可以添加到session对象中，因此用该方法取回对象时，应显式转化为原来的类型。
+       获取session对象索引关键字是key的对象。由于任何对象都可以添加到session对象中，因此用该方法取回对象时，应显式转化为原来的类型。
 
 ---
 
@@ -1725,9 +1657,7 @@ String str=response.encodeRedirectURL("example4_13_b.jsp");
 
 ![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057212.png)
 
-----
-
-
+---
 
 #### 3.3.4 session对象的生存期限
 
@@ -1738,14 +1668,12 @@ String str=response.encodeRedirectURL("example4_13_b.jsp");
 ▲打开Tomcat安装目录中conf文件下的配置文件web.xml，找到
 
 ```xml
-<session-config>        
+<session-config>      
 	<session-timeout>30</session-timeout> 
 </session-config>
 ```
 
 将其中的30修改成所要求的值即可（单位为分钟）。。
-
-
 
 ### 3.4 application对象
 
@@ -1757,15 +1685,12 @@ application对象也是由Tomcat服务器负责创建，但与session对象不�
 
 1. **public void setAttribute(String  key ,Object  obj)**
 
-   ​		application对象可以调用该方法将参数Object 指定的对象 obj添加到application对象中，并为添加的对象指定了一个索引关键字，如果添加的两个对象的关键字相同，则先前添加对象被清除。
-
+       application对象可以调用该方法将参数Object 指定的对象 obj添加到application对象中，并为添加的对象指定了一个索引关键字，如果添加的两个对象的关键字相同，则先前添加对象被清除。
 2. **public Object getAttibute(String key)**
 
-   ​		获取application对象含有的关键字是key的对象。由于任何对象都可以添加到application对象中，因此用该方法取回对象时，应显式转化为原来的类型
+       获取application对象含有的关键字是key的对象。由于任何对象都可以添加到application对象中，因此用该方法取回对象时，应显式转化为原来的类型
 
 ***■由于application对象对所有的用户都是相同的，因此，在某些情况下，对该对象的操作需要实现同步（synchronized）处理***
-
-
 
 ## 4.JSP 与Java bean
 
@@ -1777,9 +1702,9 @@ JSP页面可以将数据的处理过程指派给一个或几个bean来完成，�
 
 #### 4.1.1 编写Javabean
 
-​		**编写Javabean就是编写一个Java的类**，所以只要会写类就能编写一个Javabean。这个类创建的一个对象称为一个Javabean，**简称bean**，分配给bean的变量（成员变量），也称bean的属性。
-
-​		为了能让使用bean的应用程序构建工具（比如Tomcat服务器）使用JSP动作标记知道bean的属性和方法，只须在类的方法命名上遵守以下规则：
+    **编写Javabean就是编写一个Java的类**，所以只要会写类就能编写一个Javabean。这个类创建的一个对象称为一个Javabean，**简称bean**，分配给bean的变量（成员变量），也称bean的属性。
+    
+    为了能让使用bean的应用程序构建工具（比如Tomcat服务器）使用JSP动作标记知道bean的属性和方法，只须在类的方法命名上遵守以下规则：
 
 1. 如果类的成员变量，也称bean的属性的名字是xxx，那么为了获取或更改bean的属性的值，类中必须提供==两个方法==：
 
@@ -1787,9 +1712,7 @@ JSP页面可以将数据的处理过程指派给一个或几个bean来完成，�
    - **setXxx()，用来修改属性xxx.。**
 
    也就是方法的名字用get或set为前缀，后缀是将属性（成员变量）名字的首字母大写的字符序列。
-
 2. 类中定义的方法的==访问权限都必须是public的==。
-
 3. 类中定义的==构造方法必须是public、无参数的==。
 
 #### 4.1.2 保存bean的字节码
@@ -1812,16 +1735,14 @@ JSP页面可以将数据的处理过程指派给一个或几个bean来完成，�
    <jsp:useBean id="bean的名字" class="创建bean的类" scope= "bean有效范围">
    </jsp:useBean>
    ```
-
 2. bean的加载原理
 
-   ​		Tomcat服务器首先在Tomcat服务器管理的pageContent内置对象中查找是否含有这样的bean。如果这样的bean存在，Tomcat服务器就分配这样的bean给用户，如果在pageContent中没有查找到JSP动作标记要求的bean，就根据class指定的类创建一个bean，并将所创建的bean添加到pageContent中。通过Tomcat服务器创建bean的过程可以看出，首次创建一个新的bean需要用相应类的字节码文件创建对象，当某些JSP页面再需要同样的bean时，Tomcat服务器直接将pageContent中已经有的bean分配给JSP页面，提高了JSP使用bean的效率。
-
-   ​		如果修改了字节码文件，必须重新启动Tomcat服务器才能使用新的字节码文件。
-
+       Tomcat服务器首先在Tomcat服务器管理的pageContent内置对象中查找是否含有这样的bean。如果这样的bean存在，Tomcat服务器就分配这样的bean给用户，如果在pageContent中没有查找到JSP动作标记要求的bean，就根据class指定的类创建一个bean，并将所创建的bean添加到pageContent中。通过Tomcat服务器创建bean的过程可以看出，首次创建一个新的bean需要用相应类的字节码文件创建对象，当某些JSP页面再需要同样的bean时，Tomcat服务器直接将pageContent中已经有的bean分配给JSP页面，提高了JSP使用bean的效率。
+       
+       如果修改了字节码文件，必须重新启动Tomcat服务器才能使用新的字节码文件。
 3. bean的有效范围和生命周期
 
-   - ==**<u>page bean</u>**==
+   - ==**`<u>`page bean`</u>`**==
 
      scope取值为page的bean称为page bean.
 
@@ -1829,51 +1750,40 @@ JSP页面可以将数据的处理过程指派给一个或几个bean来完成，�
      <jsp:useBean id="circle" class="tom.jiafei.Circle" scope="page" />
      ```
 
-     ■page bean的**<u>有效范围是用户访问的当前页面</u>**，**<u>存活时间直到当前页面执行完毕</u>**。
+     ■page bean的**`<u>`有效范围是用户访问的当前页面`</u>`**，**`<u>`存活时间直到当前页面执行完毕`</u>`**。
 
-     ■**<u>不同用户（浏览器）的page bean是互不相同的</u>**。也就是说，当两个用户同时访问一个JSP页面时，一个用户对自己page bean的属性的改变，不会影响到另一个用户。
-
-     
-
-   - ==<u>**session bean**</u>==
+     ■**`<u>`不同用户（浏览器）的page bean是互不相同的`</u>`**。也就是说，当两个用户同时访问一个JSP页面时，一个用户对自己page bean的属性的改变，不会影响到另一个用户。
+   - ==`<u>`**session bean**`</u>`==
 
      ```jsp
      <jsp:useBean id="circle" class="tom.jiafei.Circle" scope="session" />
      ```
 
-     ■session bean的**<u>有效范围是用户访问的Web服务目录下的各个页面</u>**，**<u>存活时间是用户的会话期（session）间</u>**。
+     ■session bean的**`<u>`有效范围是用户访问的Web服务目录下的各个页面`</u>`**，**`<u>`存活时间是用户的会话期（session）间`</u>`**。
 
      ■如果用户访问Web服务目录多个页面，那么每个页面id相同的session bean是同一个bean。
 
      ■不同用户（浏览器）的session bean是互不相同的.
-
-     
-
-   - ==**<u>request bean</u>**==
+   - ==**`<u>`request bean`</u>`**==
 
      ```jsp
      <jsp:useBean id="circle" class="tom.jiafei.Circle" scope="request" />
      ```
 
-     ■ bean的**<u>有效范围是用户请求的当前页面</u>**，**<u>存活时间是从用户的请求到请求结束</u>**。request bean存活时间略长于page bean的存活时间，原因是Tomcat服务器认为页面执行完毕后，响应才算结束。
+     ■ bean的**`<u>`有效范围是用户请求的当前页面`</u>`**，**`<u>`存活时间是从用户的请求到请求结束`</u>`**。request bean存活时间略长于page bean的存活时间，原因是Tomcat服务器认为页面执行完毕后，响应才算结束。
 
      ■不同用户的request bean的也是互不相同的。也就是说，当两个用户同时请求一个JSP页面时，一个用户对自己request bean的属性的改变，不会影响到另一个用户。
-
-     
-
-   - ==**<u>application bean</u>**==
+   - ==**`<u>`application bean`</u>`**==
 
      ```jsp
      <jsp:useBean id="circle" class="tom.jiafei.Circle" scope="application" />
      ```
 
-     ■application bean的**<u>有效范围是当前Web服务目录下的各个页面</u>**，**<u>存活时间直到Tomcat服务器关闭</u>**。
+     ■application bean的**`<u>`有效范围是当前Web服务目录下的各个页面`</u>`**，**`<u>`存活时间直到Tomcat服务器关闭`</u>`**。
 
-     ■Tomcat服务器为访问Web服务目录的所有用户分配一个共享的bean，即不同用户的application bean也都是相同的一个。也就是说，**<u>任何一个用户对自己application bean的属性的改变，都会影响到其他的用户</u>**（不同Web服务目录的application bean互不相同）。
+     ■Tomcat服务器为访问Web服务目录的所有用户分配一个共享的bean，即不同用户的application bean也都是相同的一个。也就是说，**`<u>`任何一个用户对自己application bean的属性的改变，都会影响到其他的用户`</u>`**（不同Web服务目录的application bean互不相同）。
 
-​		![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057629.png)
-
-
+    ![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090057629.png)
 
 ### 4.2 获取和修改bean的属性
 
@@ -1881,7 +1791,7 @@ JSP页面可以将数据的处理过程指派给一个或几个bean来完成，�
 
 #### 4.2.1 getProperty动作标记
 
-​	使用 **<u>getProperty</u>** 动作标记可以**<u>获得bean的属性值</u>**，并将这个值用串的形式发送给用户的浏览器
+    使用**`<u>`getProperty`</u>`** 动作标记可以**`<u>`获得bean的属性值`</u>`**，并将这个值用串的形式发送给用户的浏览器
 
 ```jsp
 <jsp:getProperty  name="bean的id " property="bean的属性" />
@@ -1895,9 +1805,9 @@ property取值是该bean的一个属性的名字。
 
 ```
 
-​	当JSP页面使用getProperty标记获取属性xxx的值时，必须保证bean有相应的getXxx方法，即对方法的名字的命名有特殊的要求
-
-​	注意：让request调用setCharacterEncoding方法设置编码为utf-8，以避免显示bean的属性值出现乱码现象
+    当JSP页面使用getProperty标记获取属性xxx的值时，必须保证bean有相应的getXxx方法，即对方法的名字的命名有特殊的要求
+    
+    注意：让request调用setCharacterEncoding方法设置编码为utf-8，以避免显示bean的属性值出现乱码现象
 
 #### 4.2.1 setProperty动作标记
 
@@ -1912,8 +1822,7 @@ property取值是该bean的一个属性的名字。
    value给出的值的类型要和bean的属性的类型一致。
    -->
    ```
-
-2. 通过<u>**HTTP表单**</u>的参数的值来设置bean的相应属性的值。
+2. 通过`<u>`**HTTP表单**`</u>`的参数的值来设置bean的相应属性的值。
 
    - 用form表单的所有参数的值设置bean相对应的属性值的使用格式如下：
 
@@ -1923,7 +1832,6 @@ property取值是该bean的一个属性的名字。
      	在setProperty标记的上述用法中不具体指定bean属性的值将对应form表单中哪个参数指定的值，系统会自动根据名字进行匹配对应，但要求bean属性的名字必须在form表单中有名称相同的参数名字相对应，Tomcat服务器会自动将参数的字符串值转换为bean相对应的属性的值
      -->
      ```
-
    - 用form表单的某个参数的值设置bean的某个属性值的使用格式如下：
 
      ```jsp
@@ -2038,11 +1946,9 @@ public class Goods {
 
 ---
 
-
-
 ### 4.3 bean的辅助类
 
-​	写一个创建bean的类时，除了需要用import语句引入JDK提供的类，可能还需要自己编写一些其他的类，只要将这样类的包名和bean类的包名一致即可（也可以和创建bean的类写在一个Java源文件中）。
+    写一个创建bean的类时，除了需要用import语句引入JDK提供的类，可能还需要自己编写一些其他的类，只要将这样类的包名和bean类的包名一致即可（也可以和创建bean的类写在一个Java源文件中）。
 
 ---
 
@@ -2141,8 +2047,6 @@ public class ListFile {
 
 ---
 
-
-
 ## 5.Java Servlet基础
 
 ---
@@ -2153,13 +2057,11 @@ public class ListFile {
 
 1．Servlet类
 
-​	**servlet的类就是<u>javax.servlet.http包中的HttpServlet类的子类</u>。HttpServlet实现了Servlet接口，实现了响应用户的方法。HttpServlet的子类被习惯地称作一个Servlet类，这样的类创建的对象习惯地被称作一个servlet。**
+    **servlet的类就是`<u>`javax.servlet.http包中的HttpServlet类的子类`</u>`。HttpServlet实现了Servlet接口，实现了响应用户的方法。HttpServlet的子类被习惯地称作一个Servlet类，这样的类创建的对象习惯地被称作一个servlet。**
 
 2．字节码文件的保存
 
 字节码文件按着类的包名对应的目录路径保存到Web服务目录中特定子目录中。
-
-
 
 ---
 
@@ -2188,21 +2090,19 @@ public class Example6_1 extends HttpServlet{
 
 ---
 
-
-
 #### 5.1.2  编写部署文件web.xml
 
-> ■ Servlet类的字节码文件保存到指定的目录后，<u>必须为Tomcat服务器编写一个部署文件</u>，只有这样，Tomcat服务器才会用Servlet类创建servlet对象。
+> ■ Servlet类的字节码文件保存到指定的目录后，`<u>`必须为Tomcat服务器编写一个部署文件`</u>`，只有这样，Tomcat服务器才会用Servlet类创建servlet对象。
 >
-> ■ 部署文件是一个XML文件，<u>名字必须是web.xml</u>。
+> ■ 部署文件是一个XML文件，`<u>`名字必须是web.xml`</u>`。
 >
 > ■ web.xml由Tomcat服务器负责管理，Tomcat服务器配有内置的解析器，可以解析XML文件的标记中的数据。
 >
-> ■ <u>编写的web.xml文件必须保存到Web服务目录的WEB-INF子目录中</u>
+> ■ `<u>`编写的web.xml文件必须保存到Web服务目录的WEB-INF子目录中`</u>`
 >
-> ★ Web服务目录的WEB-INF子目录下的web.xml文件负责管理当前Web服务目录下的全部servlet，<u>当该Web服务目录需要提供更多的servlet时，只要在web.xml文件中增加servlet和servlet-mapping子标记即可</u>。
+> ★ Web服务目录的WEB-INF子目录下的web.xml文件负责管理当前Web服务目录下的全部servlet，`<u>`当该Web服务目录需要提供更多的servlet时，只要在web.xml文件中增加servlet和servlet-mapping子标记即可`</u>`。
 >
-> ★ <u>对于webapps下的Web服务目录</u>，如果修改并重新保存web.xml文件，Tomcat服务器就会立刻重新读取web.xml文件，因此，<u>修改web.xml文件不必重新启动Tomcat服务器</u>。但是，如果修改导致web.xml文件出现错误，Tomcat服务器就会关闭当前Web服务目录下的所有servlet的使用权限。所以<u>必须保证web.xml文件正确无误，才能成功启动Tomcat服务器</u>。但是，<u>对于不是webapps下的Web服务目录，如果新建或修改了相应的web.xml文件，需要重新启动Tomcat服务器</u>。
+> ★ `<u>`对于webapps下的Web服务目录`</u>`，如果修改并重新保存web.xml文件，Tomcat服务器就会立刻重新读取web.xml文件，因此，`<u>`修改web.xml文件不必重新启动Tomcat服务器`</u>`。但是，如果修改导致web.xml文件出现错误，Tomcat服务器就会关闭当前Web服务目录下的所有servlet的使用权限。所以`<u>`必须保证web.xml文件正确无误，才能成功启动Tomcat服务器`</u>`。但是，`<u>`对于不是webapps下的Web服务目录，如果新建或修改了相应的web.xml文件，需要重新启动Tomcat服务器`</u>`。
 
 XML文件具体内容
 
@@ -2212,17 +2112,15 @@ XML文件具体内容
    <?xml version="1.0" encoding="utf-8" ?>
    <!--
    	<?xml 作为开始 以及 ?> 作为结束
-   	
+   
    	encoding默认值为utf-8
    -->
    ```
-
 2. 根标记-------xml文件必须有一个根标记
 
    ```xml
    <web-app></web-app>
    ```
-
 3. servlet标记及子标记-------根标记中可以包含多个servlet标记
 
    ```xml
@@ -2235,7 +2133,6 @@ XML文件具体内容
    	servlet-class 标记的内容是告诉Tomcat服务器用哪个Serlet类创建servlet
    -->
    ```
-
 4. servlet-mapping标记及子标记
 
    一个servlet标记可以对应一个或多个servlet-mapping标记
@@ -2271,8 +2168,6 @@ XML文件具体内容
 
 ---
 
-
-
 #### 5.1.3  servlet的创建与运行
 
 ■ 用户就可以根据web.xml部署文件来请求Tomcat服务器创建并运行一个servlet。
@@ -2294,25 +2189,23 @@ XML文件具体内容
 例如：request.getParameter(参数n)
 ```
 
-
-
 ### 5.2 servlet的工作原理
 
-​	servlet由Tomcat服务器负责管理，Tomcat服务器通过读取web.xml，然后创建并运行servlet。
+    servlet由Tomcat服务器负责管理，Tomcat服务器通过读取web.xml，然后创建并运行servlet。
 
 #### 5.2.1  servlet 对象的生命周期
 
-​	servlet由Tomcat服务器负责创建并完成初始化工作。当多个用户请求一个servlet时，服务器为每个用户启动一个线程。
+    servlet由Tomcat服务器负责创建并完成初始化工作。当多个用户请求一个servlet时，服务器为每个用户启动一个线程。
 
 一个servlet的生命周期主要有下列三个过程组成：
 
-(1) servlet第一次被请求加载时，服务器创建servlet，s<u>ervlet调用init方法完成必要的初始化工作。</u>
+(1) servlet第一次被请求加载时，服务器创建servlet，s`<u>`ervlet调用init方法完成必要的初始化工作。`</u>`
 
-(2) <u>新诞生的servlet再调用service方法响应用户的请求。</u>
+(2) `<u>`新诞生的servlet再调用service方法响应用户的请求。`</u>`
 
-(3) <u>当服务器关闭时，调用destroy方法销毁servlet。</u>
+(3) `<u>`当服务器关闭时，调用destroy方法销毁servlet。`</u>`
 
-​	init方法只被调用一次。当后续的用户请求servlet服务时，Tomcat服务器将启动一个新的线程，在该线程中，servlet调用service方法。也就是说，**每个用户的每次请求都导致service方法被调用执行，其执行过程分别运行在不同的线程中**。
+    init方法只被调用一次。当后续的用户请求servlet服务时，Tomcat服务器将启动一个新的线程，在该线程中，servlet调用service方法。也就是说，**每个用户的每次请求都导致service方法被调用执行，其执行过程分别运行在不同的线程中**。
 
 #### 5.2.2 init方法
 
@@ -2320,7 +2213,7 @@ XML文件具体内容
 public void init(ServletConfig  config) throws ServletException
 ```
 
-​	servlet第一次被请求加载时，服务器创建一个servlet，这个对象调用init方法完成必要的初始化工作。该方法在执行时，<u>服务器会把一个SevletConfig类型的对象传递给init()方法，这个对象就被保存在servlet中，直到servlet被销毁</u>。
+    servlet第一次被请求加载时，服务器创建一个servlet，这个对象调用init方法完成必要的初始化工作。该方法在执行时，`<u>`服务器会把一个SevletConfig类型的对象传递给init()方法，这个对象就被保存在servlet中，直到servlet被销毁`</u>`。
 
 #### 5.2.3 service方法
 
@@ -2328,7 +2221,7 @@ public void init(ServletConfig  config) throws ServletException
 public void service(HttpServletRequest request  HttpServletResponse  response)throw ServletException,IOException
 ```
 
-​	<u>Tomcat服务器将两个参数传递给该方法。和init方法不同的是，init方法只被调用一次，而service方法可能被多次的调用</u>。当后续的用户请求该servlet时，Tomcat服务器将启动一个新的线程，在该线程中servlet调用service方法响应用户的请求，调用过程运行在不同的线程中，互不干扰。因此，<u>不同线程的service方法中的局部变量互不干扰，一个线程改变了自己的service方法中局部变量的值不会影响其他线程的service方法中的局部变量</u>。
+    `<u>`Tomcat服务器将两个参数传递给该方法。和init方法不同的是，init方法只被调用一次，而service方法可能被多次的调用`</u>`。当后续的用户请求该servlet时，Tomcat服务器将启动一个新的线程，在该线程中servlet调用service方法响应用户的请求，调用过程运行在不同的线程中，互不干扰。因此，`<u>`不同线程的service方法中的局部变量互不干扰，一个线程改变了自己的service方法中局部变量的值不会影响其他线程的service方法中的局部变量`</u>`。
 
 #### 5.2.4 destroy方法
 
@@ -2336,9 +2229,7 @@ public void service(HttpServletRequest request  HttpServletResponse  response)th
 public destroy()
 ```
 
-​	当Tomcat服务器终止服务时，destroy()方法会被执行，销毁servlet.子类可直接继承这个方法，一般不需要重写。
-
-
+    当Tomcat服务器终止服务时，destroy()方法会被执行，销毁servlet.子类可直接继承这个方法，一般不需要重写。
 
 ---
 
@@ -2367,11 +2258,9 @@ public class Example6_1 extends HttpServlet{
 
 ---
 
-
-
 ### 5.3 通过JSP页面访问servlet
 
-​	按着部署文件web.xml给出的servlet的url-pattern，用户除了可以在浏览器输入url-pattern请求运行一个servlet外，也可以通过JSP页面来请求一个servlet。 <u>需要特别注意的是，如果web.xml文件中给出的servlet的url-pattern是/lookHello，那么JSP页面请求servlet时，必须要写成 lookHello，不可以写成/lookHello。</u>
+    按着部署文件web.xml给出的servlet的url-pattern，用户除了可以在浏览器输入url-pattern请求运行一个servlet外，也可以通过JSP页面来请求一个servlet。`<u>`需要特别注意的是，如果web.xml文件中给出的servlet的url-pattern是/lookHello，那么JSP页面请求servlet时，必须要写成 lookHello，不可以写成/lookHello。`</u>`
 
 1. 通过表单向servlet提交数据
 
@@ -2386,24 +2275,19 @@ public class Example6_1 extends HttpServlet{
    </form>
    用request.getParameter()方法获取
    ```
-
 2. 通过超链接访问servlet
 
-   ​	JSP页面可以使用超链接去请求某个servlet。如果web.xml文件中给出的请求servlet的url-pattern是/circle，那么超链接标记中href的值是circle
+       JSP页面可以使用超链接去请求某个servlet。如果web.xml文件中给出的请求servlet的url-pattern是/circle，那么超链接标记中href的值是circle
 
    ```jsp
    <a href="circle"></a>
    ```
-
-
 
 ### 5.4 共享变量
 
 ■ Servlet类是HttpServlet的一个子类，在编写子类时就可以声明某些成员变量，那么，请求servlet的用户将共享该servlet的成员变量。
 
 ■ service方法可能被多次的调用。也就是说，当后续的用户请求该servlet时，Tomcat服务器将启动一个新的线程，在该线程中servlet调用service方法响应用户的请求，即每个用户的请求都导致service方法被调用执行，调用过程运行在不同的线程中，互不干扰。因此，不同线程的service方法中的局部变量互不干扰，一个线程改变了自己的service方法中局部变量的值不会影响其他线程的service方法中的局部变量。
-
-
 
 ### 5.5 doGet和doPost方法
 
@@ -2413,9 +2297,7 @@ public class Example6_1 extends HttpServlet{
 
 ■因此，在编写的Servlet类（HttpServlet类的一个子类）时，也可以不重写service方法来响应用户，直接继承service方法即可。
 
-■<u>如果不重写service方法，就需要在Servlet类中重写doPost或doGet方法来响应用户的请求。</u>如果不论用户请求类型是post还是get，Tomcat服务器的处理过程完全相同，那么可以只在doPost方法中编写处理过程，而在doGet方法中再调用doPost方法即可，或只在doGet方法中编写处理过程，而在doPost方法中再调用doGet方法。如果根据请求的类型进行不同的处理，就要在两个方法中编写不同的处理过程（这一点比service方法更为灵活）
-
-
+■`<u>`如果不重写service方法，就需要在Servlet类中重写doPost或doGet方法来响应用户的请求。`</u>`如果不论用户请求类型是post还是get，Tomcat服务器的处理过程完全相同，那么可以只在doPost方法中编写处理过程，而在doGet方法中再调用doPost方法即可，或只在doGet方法中编写处理过程，而在doPost方法中再调用doGet方法。如果根据请求的类型进行不同的处理，就要在两个方法中编写不同的处理过程（这一点比service方法更为灵活）
 
 ### 5.6 重定向与转发
 
@@ -2429,8 +2311,7 @@ public class Example6_1 extends HttpServlet{
    void sendRedirect(String location)
    ```
 
-   ​	将用户重新定向到另一个JSP页面或servlet。重定向方法仅仅是将用户从当前页面或servlet定向到另一个JSP页面或servlet，但不能将用户对当前页面或servlet的请求（HttpServletRequest对象）转发给所定向的资源。即<u>重定向的目标页面或servlet无法使用request获取用户提交的数据。</u>
-
+       将用户重新定向到另一个JSP页面或servlet。重定向方法仅仅是将用户从当前页面或servlet定向到另一个JSP页面或servlet，但不能将用户对当前页面或servlet的请求（HttpServletRequest对象）转发给所定向的资源。即`<u>`重定向的目标页面或servlet无法使用request获取用户提交的数据。`</u>`
 2. 转发方法 --- forward()方法
 
    ```java
@@ -2442,7 +2323,7 @@ public class Example6_1 extends HttpServlet{
    dispatcher.forward (request,response);
    ```
 
-   ​	RequestDispatcher对象可以把用户对当前JSP页面或servlet的请求转发给另一个JSP页面或servlet，而且将用户对当前JSP页面或servlet的请求传递给转发到的JSP页面或servlet。也就是说，<u>当前页面所转发到的标页面或servlet可以使用request获取用户提交的数据。</u>
+       RequestDispatcher对象可以把用户对当前JSP页面或servlet的请求转发给另一个JSP页面或servlet，而且将用户对当前JSP页面或servlet的请求传递给转发到的JSP页面或servlet。也就是说，`<u>`当前页面所转发到的标页面或servlet可以使用request获取用户提交的数据。`</u>`
 
 ==**二者的区别**==
 
@@ -2450,13 +2331,11 @@ public class Example6_1 extends HttpServlet{
 
 ■ 另外，当servlet中执行forward方法实施转发操作时，Tomcat会立刻结速当前servlet的执行。而servlet中执行sendRedirect方法时，Tomcat服务器还是要把当前的servlet代码执行完毕后才实施重定向（跳转）操作，但Tomcat服务器不再给用户看当前servlet代码的执行效果。如果在执行sendRedirect(URL url)方法后，servlet紧接着执行了return返回语句，那么Tomcat服务器会立刻结束当前servlet的执行。
 
-
-
 ### 5.7 使用session
 
-​	HTTP通信协议是用户与服务器之间一种请求与响应（request/response）的通信协议，属于无状态协议。所谓无状态是指，当用户（浏览器）发送请求给服务器，Tomcat服务器作出响应后，如果同一个用户再发送请求给Tomcat服务器时，Tomcat服务器并不知道就是刚才的那个用户。简单地说，Tomcat服务器不会记录用户的信息。
-
-​	用户在访问一个Web服务目录期间，Tomcat服务器为该用户分配一个session对象（称为用户的会话），Tomcat服务器可以在各个页面以及servlet中使用这个session记录用户的有关信息，而且Tomcat服务器保证不同用户的session对象互不相同。
+    HTTP通信协议是用户与服务器之间一种请求与响应（request/response）的通信协议，属于无状态协议。所谓无状态是指，当用户（浏览器）发送请求给服务器，Tomcat服务器作出响应后，如果同一个用户再发送请求给Tomcat服务器时，Tomcat服务器并不知道就是刚才的那个用户。简单地说，Tomcat服务器不会记录用户的信息。
+    
+    用户在访问一个Web服务目录期间，Tomcat服务器为该用户分配一个session对象（称为用户的会话），Tomcat服务器可以在各个页面以及servlet中使用这个session记录用户的有关信息，而且Tomcat服务器保证不同用户的session对象互不相同。
 
 HttpServletRequest对象request调用getSession方法获取用户的session对象：
 
@@ -2464,9 +2343,7 @@ HttpServletRequest对象request调用getSession方法获取用户的session对�
 HttpSession session=request.getSession(true);
 ```
 
-​	访问某个Web服务目录的用户，在不同的servlet中获取的session对象是完全相同的，不同的用户的session对象互不相同。
-
-
+    访问某个Web服务目录的用户，在不同的servlet中获取的session对象是完全相同的，不同的用户的session对象互不相同。
 
 ## 6.MVC模式
 
@@ -2478,25 +2355,22 @@ HttpSession session=request.getSession(true);
 
 > MVC是一种通过三部分构造一个软件或组件的理想办法。
 >
-> ■ 模型（model） 用于<u>存储数据</u>的对象。
+> ■ 模型（model） 用于`<u>`存储数据`</u>`的对象。
 >
-> ■ 视图（view） 向控制器<u>提交所需数据</u>、<u>显示模型中的数据</u>。
+> ■ 视图（view） 向控制器`<u>`提交所需数据`</u>`、`<u>`显示模型中的数据`</u>`。
 >
-> ■ 控制器（controller） <u>负责具体的业务逻辑操作</u>，即控制器根据视图提出的要求对数据做出（商业）处理，将有关结果存储到模型中，并负责让模型和视图进行必要的交互，当模型中的数据变化时，让视图更新显示。
-
-
+> ■ 控制器（controller） `<u>`负责具体的业务逻辑操作`</u>`，即控制器根据视图提出的要求对数据做出（商业）处理，将有关结果存储到模型中，并负责让模型和视图进行必要的交互，当模型中的数据变化时，让视图更新显示。
 
 ### 6.2 JSP中的MVC模式
 
-■ 模型（Model） 一个或多个<u>Javabean对象</u>，用于<u>存储数据</u>。
+■ 模型（Model） 一个或多个`<u>`Javabean对象`</u>`，用于`<u>`存储数据`</u>`。
 
-■ 视图（View） 一个或多个<u>JSP页面</u>，其作用是<u>向控制器提交必要的数据和显示数据</u>。JSP页面可以使用HTML标记、Javabean标记以及Java程序片或Java表达式来显示数据。视图的主要工作就是显示数据，对数据的逻辑操作由控制器负责。
+■ 视图（View） 一个或多个`<u>`JSP页面`</u>`，其作用是`<u>`向控制器提交必要的数据和显示数据`</u>`。JSP页面可以使用HTML标记、Javabean标记以及Java程序片或Java表达式来显示数据。视图的主要工作就是显示数据，对数据的逻辑操作由控制器负责。
 
-■ 控制器（Controller） 一个或多个<u>servlet对象</u>，根据视图提交的要求进行数据处理操作，并将有关的结果存储到Javabean中，然后servlet使用转发或重定向的方式请求视图中的某个JSP页面显示数据。比如让某个JSP页面通过使用Javabean标记、Java程序片或Java表达式显示控制器存储在Javabean中的数据。
+■ 控制器（Controller） 一个或多个`<u>`servlet对象`</u>`，根据视图提交的要求进行数据处理操作，并将有关的结果存储到Javabean中，然后servlet使用转发或重定向的方式请求视图中的某个JSP页面显示数据。比如让某个JSP页面通过使用Javabean标记、Java程序片或Java表达式显示控制器存储在Javabean中的数据。
 
 ![](https://raw.githubusercontent.com/dafansu/Note/main/Typora/JSP/img/202307090058098.png)
 
-​        
 
 ### 6.3 模型的生命周期与视图更新
 
@@ -2576,3 +2450,6 @@ servlet建bean的第（2）步骤决定了bean为application bean。
 标记显示该application bean中的数据。
 如果servlet希望某个JSP显示其中的数据，可以使用RequestDispatcher对象向该JSP页面发出请求，也可以使用HttpServletResponse类中的重定向方法（sendRedirect）。
 ```
+
+<span style="color:red;">asjkdoakld</span>
+
