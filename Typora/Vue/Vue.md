@@ -125,3 +125,204 @@
 > ​         (1). if(){}
 >
 > ​         (2). for(){}
+
+## **1.3. 模板语法**
+
+### **1.3.1.例子**
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202307101655451.png"/>
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Vue模板语法</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 准备好一个容器 -->
+		<div id="root">
+			<h1>插值语法</h1>
+			<h3>你好，{{name}}</h3>
+			<hr>
+			<h1>指令语法</h1>
+			<a v-bind:href="atguigu.url">去{{atguigu.name}}官网(1)</a><br>
+			<a :href="vue.url">去{{vue.name}}官网(2)</a>
+			<hr>
+		</div>
+	</body>
+	<script type="text/javascript" >
+		Vue.config.productionTip = false 
+		new Vue({
+			el:"#root",
+			data:{
+				name:'jack',
+				atguigu:{
+					name:'尚硅谷',
+					url:'http://www.atguigu.com/',
+				},
+				vue:{
+					name:'Vue',
+					url:'https://cn.vuejs.org/',
+				}
+			}
+		})
+	</script>
+</html>
+```
+
+
+
+### **1.3.2. 模板的理解**
+
+html 中包含了一些 JS 语法代码，语法分为两种，分别为：
+
+1. **插值语法**（双大括号表达式）
+2. **指令语法**（以 v-开头）
+
+
+
+### **1.3.3. 插值语法**
+
+1. 功能: 用于解析标签体内容
+2. 写法：<span style="color:red;font-weight:bolder;">{{xxx}}</span>，xxx是js表达式，且可以直接读取到data中的所有属性
+
+
+
+### **1.3.4. 指令语法**
+
+1. 功能：用于解析标签（包括：标签属性、标签体内容、绑定事件.....）
+2. 举例：`v-bind:href="xxx"` 或  简写为 `:href="xxx"`，xxx同样要写js表达式，且可以直接读取到data中的所有属性。
+3. 说明：Vue中有很多的指令，且形式都是：v-????，此处我们只是拿v-bind举个例子
+
+
+
+## **1.4. 数据绑定**
+
+### **1.4.1. 例子**
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202307102359157.png"/>
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>数据绑定</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 准备好一个容器 -->
+		<div id="root">
+			单向数据绑定：<input type="text" :value="name"><br>
+			双向数据绑定：<input type="text" V-model="name">
+		</div>
+	</body>
+	<script type="text/javascript" >
+		Vue.config.productionTip = false 
+		new Vue({
+			el:'#root',
+			data:{
+				name:'Vue'
+			}
+		})
+	</script>
+</html>
+```
+
+
+
+### **1.4.2. 单向数据绑定**
+
+1. 语法：`v-bind:href ="xxx"` 或简写为 `:href`
+2. 特点：数据只能从 data 流向页面
+
+
+
+### **1.4.3. 双向数据绑定**
+
+1. 语法：`v-mode:value="xxx"` 或简写为 `v-model="xxx"`
+2. 特点：数据不仅能从 data 流向页面，还能从页面流向 data
+
+
+
+## 1.5.el与data的两种写法
+
+### 1.5.1. el有两种写法
+
+1. new Vue时候配置el属性。
+
+   ```js
+   const v = new Vue({
+   	el:'#root', //第一种写法
+   	data:{
+   		name:'尚硅谷'
+   	}
+   })
+   ```
+
+   
+
+2. 先创建Vue实例，随后再通过vm.$mount('#root')指定el的值
+
+   ```
+   const vm = new Vue({
+   	data:{
+   		name:'尚硅谷'
+   	}
+   })
+   vm.$mount('#root')
+   ```
+
+
+
+### 1.5.2. data的两种写法
+
+1. 对象式
+
+   ```js
+   const vm = new Vue({
+   	el:'#root',
+   	data:{
+   		name:'尚硅谷'
+   	}
+   })
+   ```
+
+   
+
+2. 函数式
+
+   ```js
+   const vm = new Vue({
+   	el:'#root',
+   	data(){
+       	return{
+       		name:'尚硅谷'
+       	}
+       }
+   })
+   ```
+
+   
+
+> 1.如何选择：目前哪种写法都可以，以后学习到组件时，<span style="color:red;font-weight:bolder;">data必须使用函数式</span>，否则会报错。
+>
+> 2.由Vue管理的函数，<span style="color:red;font-weight:bolder;">一定不要写箭头函数</span>，一旦写了箭头函数，this就不再是Vue实例了。
+
+
+
+## **1.6. MVVM 模型**
+
+1. M：模型(Model) ：data中的数据
+2. V：视图(View) ：模板
+3. VM：视图模型(ViewModel)：Vue实例对象
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202307102352579.png"/>
+
+> 1.data中所有的属性，最后都出现在了vm身上。
+>
+> 2.vm身上所有的属性 及 Vue原型上所有属性，在Vue模板中都可以直接使用。
