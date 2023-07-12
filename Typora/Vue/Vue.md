@@ -326,3 +326,290 @@ html 中包含了一些 JS 语法代码，语法分为两种，分别为：
 > 1.data中所有的属性，最后都出现在了vm身上。
 >
 > 2.vm身上所有的属性 及 Vue原型上所有属性，在Vue模板中都可以直接使用。
+
+
+
+## 1.7. 数据代理
+
+### 1.7.1. Object.defineProperty方法
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202307111621266.png"/>
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>回顾Object.defineproperty方法</title>
+	</head>
+	<body>
+		<script type="text/javascript" >
+			let number = 18
+			let person = {
+				name:'张三',
+				sex:'男',
+			}
+
+			Object.defineProperty(person,'age',{
+				// value:18,
+				// enumerable:true, //控制属性是否可以枚举，默认值是false
+				// writable:true, //控制属性是否可以被修改，默认值是false
+				// configurable:true //控制属性是否可以被删除，默认值是false
+
+				//当有人读取person的age属性时，get函数(getter)就会被调用，且返回值就是age的值
+				get(){
+					console.log('有人读取age属性了')
+					return number
+				},
+				
+				//当有人修改person的age属性时，set函数(setter)就会被调用，且会收到修改的具体值
+				set(value){
+					console.log('有人修改了age属性，且值是',value)
+					number = value
+				}
+			})
+            //遍历person对象
+			// console.log(Object.keys(person))
+			console.log(person)
+		</script>
+	</body>
+</html>
+```
+
+
+
+### 1.7.2. 何为数据代理
+
+数据代理：通过**一个对象代理**对**另一个对象中属性**的操作（读/写）
+
+
+
+*例子*
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>何为数据代理</title>
+	</head>
+	<body>
+		<!-- 数据代理：通过一个对象代理对另一个对象中属性的操作（读/写）-->
+		<script type="text/javascript" >
+			let obj = {x:100}
+			let obj2 = {y:200}
+
+			Object.defineProperty(obj2,'x',{
+				get(){
+					return obj.x
+				},
+				set(value){
+					obj.x = value
+				}
+			})
+		</script>
+	</body>
+</html>
+```
+
+
+
+### 1.7.3. Vue中的数据代理
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202307111656865.png"/>
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Vue中的数据代理</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<h2>学校名称：{{name}}</h2>
+			<h2>学校地址：{{address}}</h2>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+		
+		const vm = new Vue({
+			el:'#root',
+			data:{
+				name:'尚硅谷',
+				address:'宏福科技园'
+			}
+		})
+	</script>
+</html>
+```
+
+> 1.Vue中的数据代理：
+>
+> ​       通过vm对象来代理data对象中属性的操作（读/写）
+>
+> ​    2.Vue中数据代理的好处：
+>
+> ​       更加方便的操作data中的数据
+>
+> ​    3.基本原理：
+>
+> ​       通过Object.defineProperty()把data对象中所有属性添加到vm上。
+>
+> ​       为每一个添加到vm上的属性，都指定一个getter/setter。
+>
+> ​       在getter/setter内部去操作（读/写）data中对应的属性
+
+
+
+## **1.8. 事件处理**
+
+### 1.8.1 例子
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202307122127724.png"/>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>事件修饰符</title>
+	<script src="../js/vue.js"></script>
+</head>
+<body>
+	<div id="root">
+		<h1>欢迎，学习{{name}}</h1>
+		<a href="https://cn.vuejs.org/" @click.prevent="showInfo">去Vue官网</a>
+
+	</div>
+</body>
+<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+		const vm = new Vue({
+			el:"#root",
+			data(){
+				return{
+					name:'Vue'
+				}
+			},
+			methods: {
+				showInfo(event){
+					alert("同学你好!")
+				},
+			}
+		})
+</script>
+</html>
+```
+
+
+
+### **1.8.2. 绑定监听**
+
+1. `v-on:xxx="fun"`
+2. `@xxx="fun"`
+3. `@xxx="fun(参数)"`
+4. **默认事件形参: event**
+5. **隐含属性对象: $event**
+
+
+
+### **1.8.3. 事件修饰符**
+
+| 事件修饰符 |                       作用                       |
+| :--------: | :----------------------------------------------: |
+|  prevent   |               阻止默认事件（常用）               |
+|    stop    |               阻止事件冒泡（常用）               |
+|    once    |              事件只触发一次（常用）              |
+|  capture   |                使用事件的捕获模式                |
+|    self    |   只有event.target是当前操作的元素时才触发事件   |
+|  passive   | 事件的默认行为立即执行，无需等待事件回调执行完毕 |
+
+
+
+```html
+<!-- 修饰符可以连续写 -->
+<!-- 例子 -->
+<a href="http://www.atguigu.com" @click.prevent.stop="showInfo">点我提示信息</a>
+```
+
+
+
+### **1.6.4. 按键修饰符**
+
+1. keycode : 操作的是某个 keycode 值的键
+2. .keyName : 操作的某个按键名的键(少部分)
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>键盘事件</title>
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<div id="root">
+			<h2>欢迎来到{{name}}学习</h2>
+            <input type="text" placeholder="按下回车提示输入" @keydown.enter="showInfo">
+			<input type="text" placeholder="按下回车提示输入" @keydown.huiche="showInfo">
+            
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+		Vue.config.keyCodes.huiche = 13 //定义了一个别名按键
+
+		new Vue({
+			el:'#root',
+			data:{
+				name:'尚硅谷'
+			},
+			methods: {
+				showInfo(e){
+					// console.log(e.key,e.keyCode)
+					console.log(e.target.value)
+				}
+			},
+		})
+	</script>
+</html>
+```
+
+
+
+> | 1.Vue中常用的按键别名 |                                   |
+> | :-------------------- | :-------------------------------- |
+> | 回车                  | enter                             |
+> | 删除                  | delete (捕获“删除”和“退格”键)     |
+> | 退出                  | esc                               |
+> | 空格                  | space                             |
+> | 换行                  | tab (特殊，必须配合keydown去使用) |
+> | 上                    | up                                |
+> | 下                    | down                              |
+> | 左                    | left                              |
+> | 右                    | right                             |
+>
+> 
+>
+> **2**.Vue未提供别名的按键，可以使用按键原始的key值去绑定，但注意要转为kebab-case<span style="color:red;font-weight:bolder;">（短横线命名）</span>
+>
+> 
+>
+> **3**.系统修饰键（用法特殊）：ctrl、alt、shift、meta
+>
+> ​       (1).配合keyup使用：按下修饰键的同时，再按下其他键，随后释放其他键，事件才被触发。
+>
+> ​       (2).配合keydown使用：正常触发事件。
+>
+> 
+>
+> **4**.也可以使用keyCode去指定具体的按键<span style="color:red;font-weight:bolder;">（不推荐）</span>
+
