@@ -479,14 +479,14 @@ html 中包含了一些 JS 语法代码，语法分为两种，分别为：
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>事件修饰符</title>
+	<title>事件的基本使用</title>
 	<script src="../js/vue.js"></script>
 </head>
 <body>
 	<div id="root">
 		<h1>欢迎，学习{{name}}</h1>
-		<a href="https://cn.vuejs.org/" @click.prevent="showInfo">去Vue官网</a>
-
+		<button v-on:click="showInfo">点击01</button>
+		<button @click="showInfo">点击02</button>
 	</div>
 </body>
 <script type="text/javascript">
