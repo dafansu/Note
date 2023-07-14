@@ -613,3 +613,433 @@ html 中包含了一些 JS 语法代码，语法分为两种，分别为：
 >
 > **4**.也可以使用keyCode去指定具体的按键<span style="color:red;font-weight:bolder;">（不推荐）</span>
 
+
+
+## **1.9. 计算属性**
+
+### 1.9.1. 例子
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202307132056079.png"/>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>姓名案例_计算属性实现</title>
+	<script type="text/javascript" src="../js/vue.js"></script>
+</head>
+
+<body>
+	<div id="root">
+		姓：<input type="text" v-model="firstName"><br><br>
+		名：<input type="text" v-model="lastName"><br><br>
+		名字：<span>{{fullName}}</span>
+	</div>
+</body>
+<script type="text/javascript">
+	Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+
+	const vm = new Vue({
+		el: '#root',
+		data: {
+			firstName:'张',
+			lastName:'三',
+		},
+		computed: {
+			fullName:{
+				get(){
+					return this.firstName + '-' + this.lastName
+				},
+				set(value){
+					console.log('set',value)
+						const arr = value.split('-')
+						this.firstName = arr[0]
+						this.lastName = arr[1]
+				}
+			}
+		}
+	})
+</script>
+
+</html>
+```
+
+
+
+### **1.9.2. 计算属性-computed**
+
+1. 定义：要用的属性不存在，要通过已有属性计算得来。
+2. 原理：底层借助了Objcet.defineproperty方法提供的getter和setter。
+3. get函数什么时候执行？
+   - 初次读取时会执行一次。
+   - 当依赖的数据发生改变时会被再次调用。
+4. 优势：与methods实现相比，内部有缓存机制（复用），效率更高，调试方便。
+5. 备注：
+   - 计算属性最终会出现在vm上，直接读取使用即可。
+   - 如果计算属性要被修改，那必须写set函数去响应修改，且set中要引起计算时依赖的数据发生改变。
+
+```js
+// 简写
+computed:{
+    fullName(){
+        console.log('get被调用了')
+        return this.firstName + '-' + this.lastName
+	}
+}
+//完整写法
+computed: {
+    fullName:{
+        get(){
+            return this.firstName + '-' + this.lastName
+        },
+            set(value){
+                console.log('set',value)
+                const arr = value.split('-')
+                this.firstName = arr[0]
+                this.lastName = arr[1]
+            }
+    }
+}
+```
+
+
+
+## 1.10. 侦听器
+
+### 1.10.1. 例子
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202307141843986.png"/>
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>天气案例_深度监视</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<h2>今天天气很{{info}}</h2>
+			<button @click="changeWeather">切换天气</button>
+			<hr/>
+			<h3>a的值是:{{numbers.a}}</h3>
+			<button @click="numbers.a++">点我让a+1</button>
+			<h3>b的值是:{{numbers.b}}</h3>
+			<button @click="numbers.b++">点我让b+1</button>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+		
+		const vm = new Vue({
+			el:'#root',
+			data:{
+				isHot:true,
+				numbers:{
+					a:1,
+					b:1
+				}
+			},
+			computed:{
+				info(){
+					return this.isHot ? '炎热' : '凉爽'
+				}
+			},
+			methods: {
+				changeWeather(){
+					this.isHot = !this.isHot
+				}
+			},
+			watch:{
+				isHot:{
+					// immediate:true, //初始化时让handler调用一下
+					//handler什么时候调用？当isHot发生改变时。
+					handler(newValue,oldValue){
+						console.log('isHot被修改了',newValue,oldValue)
+					}
+				},
+				//监视多级结构中某个属性的变化
+				'numbers.a':{
+					handler(){
+						console.log('a被改变了')
+					}
+				} ,
+				//监视多级结构中所有属性的变化
+				numbers:{
+					deep:true,
+					handler(){
+						console.log('numbers改变了')
+					}
+				}
+			}
+		})
+	// vm.$watch('isHot',{
+	// 		handler(newValue,oldValue){
+	// 			console.log('isHot被修改了',newValue,oldValue)
+	// 		}
+	// 	})
+	</script>
+</html>
+```
+
+
+
+### 1.10.2. 侦听器-computed
+
+1. 当被监视的属性**变化**时, 回调函数**自动调用**, 进行相关操作
+
+2. 监视的属性**必须存在**，才能进行监视！！
+
+3. 监视的两种写法：
+
+   1. new Vue时传入watch配置
+
+      ```js
+      watch:{
+          isHot:{
+              handler(newValue,oldValue){
+                  console.log('isHot被修改了',newValue,oldValue)
+              }
+          }
+      }
+      ```
+
+   2. 通过vm.$watch监视
+
+      ```js
+      vm.$watch('isHot',{
+          handler(newValue,oldValue){
+          	console.log('isHot被修改了',newValue,oldValue)
+      	}
+      })
+      ```
+
+4. ```js
+   //简写
+   //第1种
+   watch:{
+       isHot(newValue,oldValue){
+           console.log('isHot被修改了',newValue,oldValue,this)
+       }
+   }
+   //第2种
+   vm.$watch('isHot',(newValue,oldValue)=>{
+       console.log('isHot被修改了',newValue,oldValue,this)
+   })
+   ```
+
+   
+
+### 1.10.3. 深度监视
+
+1. Vue中的watc**h默认不监测对象内部值的改变**（一层）
+2. 配置`deep:true`可以监测对象内部值改变（多层）
+
+> (1).Vue自身可以监测对象内部值的改变，但Vue提供的watch默认不可以！
+>
+> (2).使用watch时根据数据的具体结构，决定是否采用深度监视。
+
+
+
+### 1.10.4 computed和watch之间的区别
+
+1. computed能完成的功能，watch都可以完成。
+2. watch能完成的功能，computed不一定能完成，例如：watch可以进行异步操作。
+
+> **两个重要的小原则：**
+>
+> ​	1.所被Vue管理的函数，最好写成普通函数，这样this的指向才是vm 或 组件实例对象。
+>
+> ​	2.所有不被Vue所管理的函数（定时器的回调函数、ajax的回调函数等、Promise的回调函数），最好写成箭头函数，这样this的指向才是vm 或 组件实例对象。
+
+
+
+## 1.11.**class 与 style 绑定**
+
+### 1.11.1. **理解**
+
+1. 在应用界面中, 某个(些)元素的样式是变化的
+2. class/style 绑定就是专门用来实现动态样式效果的技术
+
+
+
+### 1.11.2. **class 绑定**
+
+写法:`class="xxx"` xxx可以是字符串、对象、数组。
+
+1. 字符串写法适用于：类名不确定，要动态获取。
+2. 对象写法适用于：要绑定多个样式，个数不确定，名字也不确定。
+3. 数组写法适用于：要绑定多个样式，个数确定，名字也确定，但不确定用不用。
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>绑定样式</title>
+		<style>
+			.basic{
+				width: 400px;
+				height: 100px;
+				border: 1px solid black;
+			}
+			
+			.happy{
+				border: 4px solid red;;
+				background-color: rgba(255, 255, 0, 0.644);
+				background: linear-gradient(30deg,yellow,pink,orange,yellow);
+			}
+			.sad{
+				border: 4px dashed rgb(2, 197, 2);
+				background-color: gray;
+			}
+			.normal{
+				background-color: skyblue;
+			}
+
+			.atguigu1{
+				background-color: yellowgreen;
+			}
+			.atguigu2{
+				font-size: 30px;
+				text-shadow:2px 2px 10px red;
+			}
+			.atguigu3{
+				border-radius: 20px;
+			}
+		</style>
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<div id="root">
+			<!-- 绑定class样式--字符串写法，适用于：样式的类名不确定，需要动态指定 -->
+			<div class="basic" :class="mood" @click="changeMood">{{name}}</div><br/><br/>
+			<!-- 绑定class样式--数组写法，适用于：要绑定的样式个数不确定、名字也不确定 -->
+			<div class="basic" :class="classArr">{{name}}</div><br/><br/>
+			<!-- 绑定class样式--对象写法，适用于：要绑定的样式个数确定、名字也确定，但要动态决定用不用 -->
+			<div class="basic" :class="classObj">{{name}}</div><br/><br/>
+		</div>
+	</body>
+	<script type="text/javascript">
+		Vue.config.productionTip = false
+		const vm = new Vue({
+			el:'#root',
+			data:{
+				name:'尚硅谷',
+                //字符串写法
+				mood:'normal',
+                //数组写法
+				classArr:['atguigu1','atguigu2','atguigu3'],
+                //对象写法
+				classObj:{
+					atguigu1:false,
+					atguigu2:false,
+				},
+			},
+			methods: {
+				changeMood(){
+					const arr = ['happy','sad','normal']
+					const index = Math.floor(Math.random()*3)
+					this.mood = arr[index]
+				}
+			},
+		})
+	</script>
+	
+</html>
+```
+
+
+
+### 1.11.3. **style 绑定**
+
+1. `:style="{fontSize: xxx}"`其中xxx是动态值。
+2. `:style="[a,b]"`其中a、b是样式对象。
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>绑定样式</title>
+		<style>
+			.basic{
+				width: 400px;
+				height: 100px;
+				border: 1px solid black;
+			}
+			
+			.happy{
+				border: 4px solid red;;
+				background-color: rgba(255, 255, 0, 0.644);
+				background: linear-gradient(30deg,yellow,pink,orange,yellow);
+			}
+			.sad{
+				border: 4px dashed rgb(2, 197, 2);
+				background-color: gray;
+			}
+			.normal{
+				background-color: skyblue;
+			}
+
+			.atguigu1{
+				background-color: yellowgreen;
+			}
+			.atguigu2{
+				font-size: 30px;
+				text-shadow:2px 2px 10px red;
+			}
+			.atguigu3{
+				border-radius: 20px;
+			}
+		</style>
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<!-- 绑定style样式--对象写法 -->
+			<div class="basic" :style="styleObj">{{name}}</div> <br/><br/>
+			<!-- 绑定style样式--数组写法 -->
+			<div class="basic" :style="styleArr">{{name}}</div>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false
+		
+		const vm = new Vue({
+			el:'#root',
+			data:{
+				name:'尚硅谷',
+                //对象写法
+				styleObj:{
+					fontSize: '40px',
+					color:'red',
+				},
+				styleObj2:{
+					backgroundColor:'orange'
+				},
+                //数组写法
+				styleArr:[
+					{
+						fontSize: '40px',
+						color:'blue',
+					},
+					{
+						backgroundColor:'gray'
+					}
+				]
+			},
+		})
+	</script>
+</html>
+```
+
