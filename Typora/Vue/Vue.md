@@ -1133,7 +1133,7 @@ computed: {
 
 ## 1.13.**列表渲染**
 
-### 1.13.1 基本例子
+### 1.13.1 例子
 
 <img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202307152324871.png"/>
 
