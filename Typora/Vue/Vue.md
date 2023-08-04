@@ -1247,3 +1247,305 @@ computed: {
 
 <img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202307152344768.png"/>
 
+## 1.14. Vue监视数据
+
+1. vue会监视data中所有层次的数据。
+
+2. 如何监测对象中的数据？
+
+   ```
+   通过setter实现监视，且要在new Vue时就传入要监测的数据。
+   (1).对象中后追加的属性，Vue默认不做响应式处理
+   (2).如需给后添加的属性做响应式，请使用如下API：
+           Vue.set(target，propertyName/index，value) 或 
+           vm.$set(target，propertyName/index，value)
+   ```
+
+3. 如何监测数组中的数据？
+
+   ```
+   通过包裹数组更新元素的方法实现，本质就是做了两件事：
+   (1).调用原生对应的方法对数组进行更新。
+   (2).重新解析模板，进而更新页面。
+   ```
+
+4. 在Vue修改数组中的某个元素一定要用如下方法：
+
+   ```
+   1.使用这些API:push()、pop()、shift()、unshift()、splice()、sort()、reverse()
+   2.Vue.set() 或 vm.$set()
+   ```
+
+<span style="color:red;font-weight:bolder">特别注意：</span>Vue.set() 和 vm.$set() 不能给vm 或 vm的根数据对象 添加属性！！！
+
+
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>总结数据监视</title>
+		<style>
+			button{
+				margin-top: 10px;
+			}
+		</style>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<h1>学生信息</h1>
+			<button @click="student.age++">年龄+1岁</button> <br/>
+			<button @click="addSex">添加性别属性，默认值：男</button> <br/>
+			<button @click="student.sex = '未知' ">修改性别</button> <br/>
+			<button @click="addFriend">在列表首位添加一个朋友</button> <br/>
+			<button @click="updateFirstFriendName">修改第一个朋友的名字为：张三</button> <br/>
+			<button @click="addHobby">添加一个爱好</button> <br/>
+			<button @click="updateHobby">修改第一个爱好为：开车</button> <br/>
+			<button @click="removeSmoke">过滤掉爱好中的抽烟</button> <br/>
+			<h3>姓名：{{student.name}}</h3>
+			<h3>年龄：{{student.age}}</h3>
+			<h3 v-if="student.sex">性别：{{student.sex}}</h3>
+			<h3>爱好：</h3>
+			<ul>
+				<li v-for="(h,index) in student.hobby" :key="index">
+					{{h}}
+				</li>
+			</ul>
+			<h3>朋友们：</h3>
+			<ul>
+				<li v-for="(f,index) in student.friends" :key="index">
+					{{f.name}}--{{f.age}}
+				</li>
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+		const vm = new Vue({
+			el:'#root',
+			data:{
+				student:{
+					name:'tom',
+					age:18,
+					hobby:['抽烟','喝酒','烫头'],
+					friends:[
+						{name:'jerry',age:35},
+						{name:'tony',age:36}
+					]
+				}
+			},
+			methods: {
+				addSex(){
+					// Vue.set(this.student,'sex','男')
+					this.$set(this.student,'sex','男')
+				},
+				addFriend(){
+					this.student.friends.unshift({name:'jack',age:70})
+				},
+				updateFirstFriendName(){
+					this.student.friends[0].name = '张三'
+				},
+				addHobby(){
+					this.student.hobby.push('学习')
+				},
+				updateHobby(){
+					// this.student.hobby.splice(0,1,'开车')
+					// Vue.set(this.student.hobby,0,'开车')
+					this.$set(this.student.hobby,0,'开车')
+				},
+				removeSmoke(){
+					this.student.hobby = this.student.hobby.filter((h)=>{
+						return h !== '抽烟'
+					})
+				}
+			}
+		})
+	</script>
+</html>
+```
+
+## **1.15. 收集表单数据**
+
+### 1.15.1. 例子
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202308041518021.png"/>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>收集表单数据</title>
+	<script type="text/javascript" src="../js/vue.js"></script>
+</head>
+
+<body>
+	<div id="root">
+		<form @submit.prevent="demo">
+			账号：<input type="text" v-model.trim="userInfo.account"><br><br>
+			密码：<input type="password" v-model.trim="userInfo.password"><br><br>
+			年龄：<input type="number" v-model.number="userInfo.age"><br><br>
+			性别：
+					男<input type="radio" value="男" name="sex" v-model="userInfo.sex">
+					女<input type="radio" value="女" name="sex" v-model="userInfo.sex">
+					<br><br>
+			爱好：
+				吃饭<input type="checkbox" value="吃饭" v-model="userInfo.hobby">
+				打游戏<input type="checkbox" value="打游戏" v-model="userInfo.hobby">
+				学习<input type="checkbox" value="学习" v-model="userInfo.hobby">
+				<br><br>
+			城市：
+				<select v-model="userInfo.city">
+					<option value="">请选择校区</option>
+					<option value="北京">北京</option>
+					<option value="深圳">深圳</option>
+					<option value="上海">上海</option>
+					<option value="广州">广州</option>
+				</select>
+				<br><br>
+			其他信息：
+				<textarea v-model.lazy="userInfo.other"></textarea>
+				<br><br>
+			<input type="checkbox" v-model="userInfo.agree">阅读并接受<a href="#">《用户协议》</a><br><br>
+			<button>提交</button>
+		</form>
+	</div>
+</body>
+<script type="text/javascript">
+	Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+
+	new Vue({
+		el: '#root',
+		data: {
+			userInfo:{
+				account:'',
+				password:"",
+				age:"",
+				sex:"男",
+				hobby:[],
+				city:'',
+				other:'',
+				agree:''
+			}	
+		},
+		methods: {
+			demo(){
+				console.log(JSON.stringify(this.userInfo))
+			}
+		},
+	})
+</script>
+</html>
+```
+
+
+
+### 1.15.2. 总结
+
+1. `<input type="text"/>`，则v-model收集的是value值，用户输入的就是value值。
+2. `<input type="radio"/>`，则v-model收集的是value值，且要给标签配置value值。
+3. `<input type="checkbox"/>`
+   - **没有**配置input的**value属性**，那么收集的就是checked（勾选 or 未勾选，**是布尔值**）
+   - 配置input的value属性:
+     1. v-model的**初始值是非数组**，那么收集的就是checked（勾选 or 未勾选，**是布尔值**）
+     2. v-model的**初始值是数组**，那么收集的的就是**value组成的数组**
+4. v-model的三个修饰符：
+   - **lazy**：失去焦点再收集数据
+   - **number**：输入字符串转为有效的数字
+   - **trim**：输入首尾空格过滤
+
+
+
+## **1.16. 过滤器**
+
+### 1.16.1 例子
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202308041552833.png"/>
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>过滤器</title>
+		<script type="text/javascript" src="../js/vue.js"></script>
+		<script type="text/javascript" src="../js/dayjs.min.js"></script>
+	</head>
+	<body>
+		<div id="root">
+			<h2>显示格式化后的时间</h2>
+			<!-- 计算属性实现 -->
+			<h3>现在是：{{fmtTime}}</h3>
+			<!-- methods实现 -->
+			<h3>现在是：{{getFmtTime()}}</h3>
+			<!-- 过滤器实现 -->
+			<h3>现在是：{{time | timeFormater}}</h3>
+			<!-- 过滤器实现（传参） -->
+			<h3>现在是：{{time | timeFormater('YYYY_MM_DD') | mySlice}}</h3>
+			<h3 :x="msg | mySlice">尚硅谷</h3>
+		</div>
+
+		<div id="root2">
+			<h2>{{msg | mySlice}}</h2>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false
+		//全局过滤器
+		Vue.filter('mySlice',function(value){
+			return value.slice(0,4)
+		})
+		
+		new Vue({
+			el:'#root',
+			data:{
+				time:new Date(), //时间戳
+				msg:'你好，尚硅谷'
+			},
+			computed: {
+				fmtTime(){
+					return dayjs(this.time).format('YYYY年MM月DD日 HH:mm:ss')
+				}
+			},
+			methods: {
+				getFmtTime(){
+					return dayjs(this.time).format('YYYY年MM月DD日 HH:mm:ss')
+				}
+			},
+			//局部过滤器
+			filters:{
+				timeFormater(value,str='YYYY年MM月DD日 HH:mm:ss'){
+					return dayjs(value).format(str)
+				}
+			}
+		})
+
+		new Vue({
+			el:'#root2',
+			data:{
+				msg:'hello,atguigu!'
+			}
+		})
+	</script>
+</html>
+```
+
+
+
+### **1.16.2. 理解过滤器**
+
+- 定义：对要显示的数据进行特定格式化后再显示（适用于一些简单逻辑的处理）。
+- 语法：
+  1. 注册过滤器：`Vue.filter(name,callback)` 或 `new Vue{filters:{}}`
+  2. 使用过滤器：`{{ xxx | 过滤器名}}`  或  `v-bind:属性 = "xxx | 过滤器名"`
+- 注意：
+  1. 过滤器也可以**接收额外参数**、**多个过滤器也可以串联**
+  2. 并**没有改变原本的数据**, 是产生新的对应的数据
+
