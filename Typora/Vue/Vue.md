@@ -1927,9 +1927,150 @@ computed: {
    - `update`：指令所在模板结构**被重新解析**时调用。
 2. 注意：
    - **指令定义时不加v-，但使用时要加v-**；
-   - 指令名如果是多个单词，要使用**kebab-case**命名方式，不要用camelCase命名（）。
+   - 指令名如果是多个单词，要使用**kebab-case**命名方式，不要用camelCase命名。
 
 > <span style="color:red;font-weight:bolder">kebab-case命名： </span>要求短语内的各个单词或缩写之间以`-`（连字符）做间隔。
 >
 > <span style="color:red;font-weight:bolder">camelCase命名：</span>驼峰式命名
 
+
+
+## 1.19. 生命周期
+
+### **1.19.1. 生命周期流程图**
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202308171551958.png"/>
+
+
+
+### 1.19.2. 例子
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202308172237335.png"/>
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>分析生命周期</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 准备好一个容器-->
+		<div id="root" :x="n">
+			<h2 v-text="n"></h2>
+			<h2>当前的n值是：{{n}}</h2>
+			<button @click="add">点我n+1</button>
+			<button @click="bye">点我销毁vm</button>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+
+		new Vue({
+			el:'#root',
+			// template:`
+			// 	<div>
+			// 		<h2>当前的n值是：{{n}}</h2>
+			// 		<button @click="add">点我n+1</button>
+			// 	</div>
+			// `,
+			data:{
+				n:1
+			},
+			methods: {
+				add(){
+					console.log('add')
+					this.n++
+				},
+				bye(){
+					console.log('bye')
+					this.$destroy()
+				}
+			},
+			watch:{
+				n(){
+					console.log('n变了')
+				}
+			},
+			beforeCreate() {
+				console.log('beforeCreate')
+			},
+			created() {
+				console.log('created')
+			},
+			beforeMount() {
+				console.log('beforeMount')
+			},
+			mounted() {
+				console.log('mounted')
+			},
+			beforeUpdate() {
+				console.log('beforeUpdate')
+			},
+			updated() {
+				console.log('updated')
+			},
+			beforeDestroy() {
+				console.log('beforeDestroy')
+			},
+			destroyed() {
+				console.log('destroyed')
+			},
+		})
+	</script>
+</html>
+```
+
+
+
+### 1.19.3. **常用的生命周期钩子**
+
+1. **mounted**: 发送ajax请求、启动定时器、绑定自定义事件、订阅消息等【初始化操作】
+2. **beforeDestroy:** 清除定时器、解绑自定义事件、取消订阅消息等【收尾工作】
+
+
+
+### 1.19.4. 关于销毁Vue实例
+
+1. 销毁后借助Vue开发者工具看不到任何信息
+2. 销毁后**自定义事件**会**失效**，但**原生DOM事件依然有效**
+3. 一般不会在beforeDestroy操作数据，因为即便操作数据，也不会再触发更新流程了
+
+
+
+# **第 2 章：Vue 组件化编程**
+
+## **2.1 模块与组件、模块化与组件化**
+
+### **2.1.1. 模块**
+
+1. 理解 ==> 向外提供特定功能的 js 程序, 一般就是一个 js 文件
+2. 为什么 ==> js 文件很多很复杂
+3. 作用 ==> 复用 js, 简化 js 的编写, 提高 js 运行效率
+
+
+
+### **2.1.2. 组件**
+
+1. 理解 ==> 用来实现局部(特定)功能效果的代码集合(html/css/js/image…..)
+2. 为什么 ==> 一个界面的功能很复杂
+3. 作用 ==> 复用编码, 简化项目编码, 提高运行效率
+
+
+
+### **2.1.3. 模块化**
+
+当应用中的 js 都以模块来编写的, 那这个应用就是一个模块化的应用。
+
+
+
+### **2.1.4. 组件化**
+
+当应用中的功能都是多组件的方式来编写的, 那这个应用就是一个组件化的应用
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202308180054314.png"/>
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202308180050403.png"/>
