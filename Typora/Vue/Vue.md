@@ -2258,3 +2258,32 @@ computed: {
 
 `const school = Vue.extend(options)` 可简写为：`const school = options`
 
+
+
+## 2.4. VueComponent
+
+1. school组件本质是一个<span style="color:red;font-weight:bolder">名为VueComponent的构造函数</span>，且不是程序员定义的，<span style="color:red;font-weight:bolder">是Vue.extend生成的</span>
+
+2. 我们只需要写`<school/>`或`<school></school>`，Vue解析时会帮我们创建school组件的实例对象，即Vue帮我们执行的：`new VueComponent(options)`
+
+3. 特别注意：<span style="color:red;font-weight:bolder">每次调用Vue.extend，返回的都是一个全新的VueComponent！！！！</span>
+
+4. 关于this指向：
+
+   - **组件**配置中：data函数、methods中的函数、watch中的函数、computed中的函数 它们的this均是**【VueComponent实例对象】**
+   - **new Vue(options)**配置中：data函数、methods中的函数、watch中的函数、computed中的函数 它们的this均是**【Vue实例对象】**
+
+5. VueComponent的实例对象，以后简称vc（也可称之为：组件实例对象）
+
+6. Vue的实例对象，以后简称vm。
+
+   
+
+## 2.5. 一个重要的内置关系
+
+`VueComponent.prototype.__proto__ === Vue.prototype`
+
+为什么要有这个关系：让组件实例对象（vc）可以访问到 Vue原型上的属性、方法。
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202309051832953.png"/>
+
