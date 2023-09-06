@@ -2079,6 +2079,10 @@ computed: {
 
 ## 2.2. 非单文件组件
 
+**非单文件组件:一个文件中包含n个组件。**
+
+
+
 ### 2.2.1. 例子
 
 <img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202308182301460.png"/>
@@ -2286,4 +2290,172 @@ computed: {
 为什么要有这个关系：让组件实例对象（vc）可以访问到 Vue原型上的属性、方法。
 
 <img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202309051832953.png"/>
+
+
+
+## 2.6. 单文件组件
+
+**单文件组件: 一个文件中只包含1个组件。**
+
+
+
+### 2.6.1 **一个.vue 文件的组成(3 个部分)**
+
+1. 模板页面
+
+   ```vue
+   <template>
+   页面模板
+   </template>
+   ```
+
+   
+
+2. JS 模块对象
+
+   ```vue
+   <script>
+       export default {
+       data() {return {}}, methods: {}, computed: {}, components: {}
+       }
+   </script>
+   ```
+
+   
+
+3. 样式
+
+   ```vue
+   <style>
+   	样式定义
+   </style>
+   ```
+
+   
+
+### 2.6.2. 基本使用
+
+1. 引入组件
+2. 映射成标签
+3. 使用组件标签
+
+
+
+# 第3章：**使用** **Vue** **脚手架**
+
+## 3.1. 初始化脚手架
+
+### 3.1.1. 具体步骤
+
+1. **全局安装@vue/cli。（仅第一次执行）（需要安装配置nodejs）**
+
+   `npm install -g @vue/cli`
+
+   
+
+2. **切换到你要创建项目的目录，然后使用命令创建项目**
+
+   `vue create xxxx`
+
+   
+
+3. **启动项目**
+
+   `npm run serve`
+
+   
+
+**备注：**
+
+```txt
+1. 如出现下载缓慢请配置 npm 淘宝镜像：npm config set registry https://registry.npm.taobao.org
+
+2. Vue 脚手架隐藏了所有 webpack 相关的配置，若想查看具体的 webpakc 配置，
+请执行：vue inspect > output.js
+```
+
+
+
+### 3.1.2. **模板项目的结构**
+
+```txt
+├── node_modules 
+├── public
+│   ├── favicon.ico: 页签图标
+│   └── index.html: 主页面
+├── src
+│   ├── assets: 存放静态资源
+│   │   └── logo.png
+│   │── component: 存放组件
+│   │   └── HelloWorld.vue
+│   │── App.vue: 汇总所有组件
+│   │── main.js: 入口文件
+├── .gitignore: git版本管制忽略的配置
+├── babel.config.js: babel的配置文件
+├── package.json: 应用包配置文件 
+├── README.md: 应用描述文件
+├── package-lock.json：包版本控制文件
+```
+
+
+
+## 3.2. 关于不同版本的Vue
+
+1. vue.js与vue.runtime.xxx.js的区别：
+   - vue.js是完整版的Vue，包含：核心功能 + 模板解析器。
+   - vue.runtime.xxx.js是运行版的Vue，只包含：核心功能；没有模板解析器。
+2. 因为vue.runtime.xxx.js没有模板解析器，所以不能使用template这个配置项，需要使用render函数接收到的createElement函数去指定具体内容。
+
+
+
+## 3.3. vue.config.js配置文件
+
+1. 使用`vue inspect > output.js`可以查看到Vue脚手架的默认配置。
+2. 使用vue.config.js可以对脚手架进行个性化定制，详情见：https://cli.vuejs.org/zh
+
+
+
+## 3.4. ref属性
+
+1. 被用来给元素或子组件注册引用信息（id的替代者）
+2. 应用在html标签上获取的是真实DOM元素，应用在组件标签上是组件实例对象（vc）
+3. 使用方式：
+   - 标识：`<h1 ref="xxx">.....</h1>` 或 `<School ref="xxx"></School>`
+   - 获取：`this.$refs.xxx`
+
+
+
+**例子**
+
+```vue
+<template>
+	<div>
+		<h1 v-text="msg" ref="title"></h1>
+		<button @click="showDOM" ref="btn">点击输出上方的DOM</button>
+		<MySchool ref='school'></MySchool>
+	</div>
+</template>
+
+<script>
+import MySchool from "./components/MySchool.vue"
+
+export default {
+	name: "App",
+	components:{MySchool},
+	data() {
+		return {
+			msg:'欢迎学习Vue'
+		}
+	},
+	methods: {
+		showDOM(){
+			console.log(this.$refs);
+		}
+	}
+	
+}
+</script>
+```
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202309061819443.png"/>
 
