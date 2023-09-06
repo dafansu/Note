@@ -2417,8 +2417,8 @@ computed: {
 
 ## 3.4. ref属性
 
-1. 被用来给元素或子组件注册引用信息（id的替代者）
-2. 应用在html标签上获取的是真实DOM元素，应用在组件标签上是组件实例对象（vc）
+1. 被用来给**元素或子组件**注册引用信息（id的替代者）
+2. 应用在**html标签**上获取的是**真实DOM元素**，应用在**组件标签**上是**组件实例对象**（vc）
 3. 使用方式：
    - 标识：`<h1 ref="xxx">.....</h1>` 或 `<School ref="xxx"></School>`
    - 获取：`this.$refs.xxx`
@@ -2458,4 +2458,65 @@ export default {
 ```
 
 <img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202309061819443.png"/>
+
+
+
+## 3.5. props配置项
+
+1. 功能：让**组件接收外部**传过来的数据
+
+2. 传递数据：`<Demo name="xxx"/>`
+
+3. 接收数据：
+
+   - 第一种方式（只接收）：``props:['name'] `
+
+   - 第二种方式（限制类型）：`props:{name:String}`
+
+   - 第三种方式（限制类型、限制必要性、指定默认值）：
+
+     ```vue
+     props:{
+     	name:{
+     	type:String, //类型
+     	required:true, //必要性
+     	default:'老王' //默认值
+     	}
+     }
+     ```
+
+> 备注：<span style="color:red;font-weight:bolder">props是只读的</span>，Vue底层会监测你对props的修改，<span style="color:red;font-weight:bolder">如果进行了修改，就会发出警告</span>，若业务需求确实需要修改，那么请<span style="color:red;font-weight:bolder">复制props的内容到data中一份，然后去修改data中的数据。</span>
+
+
+
+## 3.6. mixin配置项(混入)
+
+1. 功能：可以把**多个组件共用的配置**提取成一个混入对象
+
+2. 使用方式：
+
+   第一步定义混合：
+
+   ```js
+   //文件名 mixin.js
+   export const xxx ={
+       data(){....},
+       methods:{....}
+       ....
+   }
+   ```
+
+   第二步导入混合：
+
+   ```js
+   import {xxx} from "./mixin"
+   ```
+
+   第三步使用混入：
+
+   全局混入：`Vue.mixin(xxx)`
+
+   局部混入：`mixins:[xxx]	`
+
+
 
