@@ -2520,3 +2520,42 @@ export default {
 
 
 
+## 3.7. plugins插件
+
+1. 用于增强Vue
+
+2. 本质：**包含install方法的一个对象，install的第一个参数是Vue**，第二个以后的参数是**插件使用者传递的数据**。
+
+3. 定义插件：
+
+   ```js
+   const xxx = {
+   	install(Vue, options){
+           // 1. 添加全局过滤器
+           Vue.filter(....)
+   
+           // 2. 添加全局指令
+           Vue.directive(....)
+   
+           // 3. 配置全局混入(合)
+           Vue.mixin(....)
+   
+           // 4. 添加实例方法
+           Vue.prototype.$myMethod = function () {...}
+           
+           Vue.prototype.hello = xxx
+   	}
+   }
+   ```
+
+4. 使用插件：`Vue.use(xxx)`
+
+
+
+## 3.8. scoped样式
+
+1. 作用：**让样式在局部生效，防止冲突**。
+2. 写法：`<style scoped></style>`
+
+> 备注：App组件不建议加scoped
+
