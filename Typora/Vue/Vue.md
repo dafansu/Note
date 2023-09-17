@@ -3007,8 +3007,8 @@ https://api.github.com/search/users?q=xxx
 
 Vuex 和单纯的全局对象有以下两点不同：
 
-1. Vuex 的状态存储是**响应式**的。当 Vue 组件从 store 中读取状态的时候，若 store 中的状态发生变化，那么相应的组件也会相应地得到高效更新。(也就是所谓的MVVM)
-2. 你不能直接改变 store 中的状态。改变 store 中的状态的唯一途径就是**显式地提交 (commit) `mutations`**。
+1. Vuex 的状态存储是**响应式**的。当 Vue 组件从 store 中读取状态的时候，若 store 中的状态`state`发生变化，那么相应的组件也会相应地得到高效更新。(也就是所谓的MVVM)
+2. 你不能直接改变 store 中的状态`state`。改变 store 中的状态的唯一途径就是**显式地提交 (commit) `mutations`**。
 
 
 
@@ -3016,5 +3016,123 @@ Vuex 和单纯的全局对象有以下两点不同：
 
 - `actions`(行为)、`mutations`(变更)、`state`(状态、数据)都是对象，且由`store`管理
 - 可以用组件`Vue Components`使用`dispatch`或者后端接口去触发`action`
+- 组件中也可以越过`actions`，即不使用`dispatch`，直接使用`commit`，提交`mutations`
 - 提交`mutations`后，可以动态的渲染组件`Vue Components`
 
+
+
+## 5.3. 搭建vuex环境
+
+1. 创建文件：`src/store/index.js`
+
+   ```js
+   //该文件用于创建Vuex中最为核心的store
+   
+   //引入Vue
+   import Vue from 'vue'
+   //引入 Vuex
+   import Vuex from "vuex"
+   //使用Vuex
+   Vue.use(Vuex)
+   
+   //准备actions对象——响应组件中用户的动作
+   const actions = {}
+   //准备mutations对象——修改state中的数据
+   const mutations = {}
+   //准备state对象——保存具体的数据
+   const state = {}
+   
+   // //创建store
+   // const store = new Vuex.Store(actions,mutations,state)
+   
+   // //导出store
+   // export default store
+   
+   //创建并导出store
+   export default new Vuex.Store({actions,mutations,state})
+   ```
+
+2. 在```main.js```中创建vm时传入```store```配置项
+
+   ```js
+   ......
+   //引入store
+   //import store from './store/index.js'
+   import store from './store'
+   ......
+   
+   //创建vm
+   new Vue({
+   	el:'#app',
+   	render: h => h(App),
+   	store
+   })
+   ```
+
+   
+
+## 5.4. 基本使用
+
+1. 初始化数据`state`、配置`actions`、配置`mutations`，操作文件`store.js`
+
+   ```js
+   //引入Vue核心库
+   import Vue from 'vue'
+   //引入Vuex
+   import Vuex from 'vuex'
+   //引用Vuex
+   Vue.use(Vuex)
+   
+   const actions = {
+       //响应组件中加的动作
+   	jia(context,value){
+   		// console.log('actions中的jia被调用了',miniStore,value)
+   		context.commit('JIA',value)
+   	},
+   }
+   
+   const mutations = {
+       //执行加
+   	JIA(state,value){
+   		// console.log('mutations中的JIA被调用了',state,value)
+   		state.sum += value
+   	}
+   }
+   
+   //初始化数据
+   const state = {
+      sum:0
+   }
+   
+   //创建并暴露store
+   export default new Vuex.Store({
+   	actions,
+   	mutations,
+   	state,
+   })
+   ```
+
+2. 组件中读取vuex中的数据：`$store.state.sum`
+
+3. 组件中修改vuex中的数据：`$store.dispatch('jia',数据)` 或 `$store.commit('JIA',数据)`
+
+   ```js
+   	methods: {
+   		increment(){
+   			this.$store.commit('JIA',this.n)
+   		},
+   
+   		decrement(){
+   			this.$store.commit('JIAN',this.n)
+   		},
+   
+   		incrementOdd(){
+   			this.$store.dispatch("jiaOdd",this.n)
+   		},
+   
+   		incrementWait(){
+   			this.$store.dispatch("jiaWait",this.n)
+   		},
+   ```
+
+> 备注：若没有网络请求或其他业务逻辑，组件中也可以越过`actions`，即不写`dispatch`，直接编写`commit`
