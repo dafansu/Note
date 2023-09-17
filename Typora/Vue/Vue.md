@@ -2790,9 +2790,19 @@ export default {
    
    
 
-## 3.16. Vue脚手架配置代理
+# **第4章： Vue 中的 ajax**
 
-<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202309142210825.png"/>
+## 4.1. Vue脚手架配置代理
+
+同源：，域名，协议，端口相同。 
+
+跨域：当一个请求 url 的协议、域名、端口三者之间任意一个与当前页面 url 不同即为跨域。
+
+**非同源的客户端脚本在没有明确授权的情况下，不能读写对方资源，在请求数据时，浏览器会在控制台中报一个异常，提示拒绝访问。**
+
+
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202309171518648.png"/>
 
 ### 方法一
 
@@ -2804,8 +2814,6 @@ module.exports = {
   		proxy:"http://localhost:5000"
 	}
 }
-
-
 ```
 
 说明：
@@ -2846,4 +2854,173 @@ module.exports = {
 
 1. 优点：可以**配置多个代理**，且可以灵活的**控制请求是否走代理**。
 2. 缺点：配置略微繁琐，**请求资源时必须加前缀**。
+
+
+
+## 4.2. github 用户搜索案例
+
+### 4.2.1. 效果
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202309171550270.png"/>
+
+
+
+### 4.2.2. 接口地址
+
+https://api.github.com/search/users?q=xxx
+
+
+
+### **4.2.3. vue 项目中常用的 2 个 Ajax 库**
+
+1. **axios**
+
+   通用的 Ajax 请求库, 官方推荐，使用广泛
+
+2. **vue-resource**
+
+   vue 插件库, vue1.x 使用广泛，**官方已不维护。**
+
+
+
+## 4.3. slot插槽
+
+1. 作用：让父组件可以向子组件指定位置插入html结构，也是一种组件间通信的方式，适用于 <strong style="color:red">父组件 ===> 子组件</strong> 。
+
+2. 分类：默认插槽、具名插槽、作用域插槽
+
+3. 使用方式：
+
+   1. 默认插槽：
+
+      ```vue
+      父组件中：
+              <Category>
+                 <div>html结构1</div>
+              </Category>
+      子组件中：
+              <template>
+                  <div>
+                     <!-- 定义插槽 -->
+                     <slot>插槽默认内容...</slot>
+                  </div>
+              </template>
+      ```
+
+   2. 具名插槽：
+
+      ```vue
+      父组件中：
+              <Category>
+                  <template slot="center">
+                    <div>html结构1</div>
+                  </template>
+      
+                  <template v-slot:footer>
+                     <div>html结构2</div>
+                  </template>
+              </Category>
+      子组件中：
+              <template>
+                  <div>
+                     <!-- 定义插槽 -->
+                     <slot name="center">插槽默认内容...</slot>
+                     <slot name="footer">插槽默认内容...</slot>
+                  </div>
+              </template>
+      ```
+
+   3. 作用域插槽：
+
+      - 理解：<span style="color:red">数据在组件的自身，但根据数据生成的结构需要组件的使用者来决定。</span>（games数据在Category组件中，但使用数据所遍历出来的结构由App组件决定）
+
+      - 具体编码：
+
+        ```vue
+        父组件中：
+        		<Category>
+        			<template scope="scopeData">
+        				<!-- 生成的是ul列表 -->
+        				<ul>
+        					<li v-for="g in scopeData.games" :key="g">{{g}}</li>
+        				</ul>
+        			</template>
+        		</Category>
+        
+        		<Category>
+        			<template slot-scope="scopeData">
+        				<!-- 生成的是h4标题 -->
+        				<h4 v-for="g in scopeData.games" :key="g">{{g}}</h4>
+        			</template>
+        		</Category>
+        子组件中：
+                <template>
+                    <div>
+                        <slot :games="games"></slot>
+                    </div>
+                </template>
+        		
+                <script>
+                    export default {
+                        name:'Category',
+                        props:['title'],
+                        //数据在子组件自身
+                        data() {
+                            return {
+                                games:['红色警戒','穿越火线','劲舞团','超级玛丽']
+                            }
+                        },
+                    }
+                </script>
+        ```
+
+   
+
+# 第5章：Vuex
+
+## 5.1. 理解 Vuex
+
+### 5.1.1 vuex 是什么
+
+1. 概念：专门在 Vue 中实现**集中式状态（数据）**管理的一个 Vue **插件**，对 vue 应
+
+   用中多个组件的**共享状态**进行集中式的管理（读/写），也是一种组件间通信的方
+
+   式，且适用于任意组件间通信。
+
+2. Github 地址: https://github.com/vuejs/vuex
+
+
+
+### 5.1.2. 什么时候使用 Vuex
+
+1. 多个组件依赖于同一状态
+2. 来自不同组件的行为需要变更同一状态
+
+
+
+### 5.1.3. 图解
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202309171613897.png"/>
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202309171613482.png"/>
+
+
+
+## 5.2. Vuex的工作原理
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202309171705681.png"/>
+
+Vuex 和单纯的全局对象有以下两点不同：
+
+1. Vuex 的状态存储是**响应式**的。当 Vue 组件从 store 中读取状态的时候，若 store 中的状态发生变化，那么相应的组件也会相应地得到高效更新。(也就是所谓的MVVM)
+2. 你不能直接改变 store 中的状态。改变 store 中的状态的唯一途径就是**显式地提交 (commit) `mutations`**。
+
+
+
+工作原理
+
+- `actions`(行为)、`mutations`(变更)、`state`(状态、数据)都是对象，且由`store`管理
+- 可以用组件`Vue Components`使用`dispatch`或者后端接口去触发`action`
+- 提交`mutations`后，可以动态的渲染组件`Vue Components`
 
