@@ -3289,3 +3289,82 @@ Vuex 和单纯的全局对象有以下两点不同：
    ...mapMutations('countAbout',{increment:'JIA',decrement:'JIAN'}),
    ```
 
+# 第6章：路由（vue-router）
+
+## 6.1. 相关理解
+
+### 6.1.1 vue-router 的理解
+
+vue 的一个插件库，专门用来实现 **SPA 应用**
+
+
+
+### 6.1.2 对 SPA 应用的理解
+
+1. 单页 Web 应用（single page web application，SPA）。
+2. 整个应用只有**一个完整的页面**。
+3. 点击页面中的导航链接**不会刷新**页面，只会做页面的**局部更新。**
+4. 数据需要通过 ajax 请求获取
+
+
+
+### 6.1.3 路由的理解
+
+1. 什么是路由?
+   - 一个路由就是一组映射关系（**key - value**）
+   - **key 为路径, value 可能是 function 或 component**
+2. 路由分类
+   1. 后端路由：
+      - 理解：value 是 function, 用于**处理客户端提交的请求**
+      - 工作过程：服务器接收到一个请求时, 根据**请求路径**找到匹配的**函数**来处理请求, 返回响应数据。
+   2. 前端路由：
+      - 理解：value 是 component，用于**展示页面内容。**
+      - 工作过程：当浏览器的路径改变时, 对应的组件就会显示。
+
+
+
+## 6.2. 基本使用
+
+1. 安装vue-router，命令：```npm i vue-router```
+
+2. 应用插件：```Vue.use(VueRouter)```（在main.js中）
+
+3. 编写router配置项:（router/index.js）
+
+   ```js
+   //引入VueRouter
+   import VueRouter from 'vue-router'
+   //引入Luyou 组件
+   import About from '../components/About'
+   import Home from '../components/Home'
+   
+   //创建router实例对象，去管理一组一组的路由规则
+   const router = new VueRouter({
+   	routes:[
+   		{
+   			path:'/about',
+   			component:About
+   		},
+   		{
+   			path:'/home',
+   			component:Home
+   		}
+   	]
+   })
+   
+   //暴露router
+   export default router
+   ```
+
+4. 实现切换（active-class可配置高亮样式）
+
+   ```vue
+   <router-link active-class="active" to="/about">About</router-link>
+   ```
+
+5. 指定展示位置
+
+   ```vue
+   <router-view></router-view>
+   ```
+
