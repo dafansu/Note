@@ -2351,19 +2351,13 @@ computed: {
 
    `npm install -g @vue/cli`
 
-   
-
 2. **切换到你要创建项目的目录，然后使用命令创建项目**
 
    `vue create xxxx`
 
-   
-
 3. **启动项目**
 
    `npm run serve`
-
-   
 
 **备注：**
 
@@ -3656,3 +3650,202 @@ vue 的一个插件库，专门用来实现 **SPA 应用**
 2. 具体名字：
    1. ```activated```路由组件被激活时触发。
    2. ```deactivated```路由组件失活时触发。
+
+
+
+## 6.12. 路由守卫
+
+1. 作用：对路由进行权限控制
+
+2. 分类：全局守卫、独享守卫、组件内守卫
+
+3. 全局守卫:
+
+   ```js
+   const router =  new VueRouter({...})
+   //全局前置守卫：初始化时执行、每次路由切换前执行
+   router.beforeEach((to,from,next)=>{
+   	console.log('beforeEach',to,from)
+   	if(to.meta.isAuth){ //判断当前路由是否需要进行权限控制
+   		if(localStorage.getItem('school') === 'atguigu'){ //权限控制的具体规则
+   			next() //放行
+   		}else{
+   			alert('暂无权限查看')
+   			// next({name:'guanyu'})
+   		}
+   	}else{
+   		next() //放行
+   	}
+   })
+   
+   //全局后置守卫：初始化时执行、每次路由切换后执行
+   router.afterEach((to,from)=>{
+   	console.log('afterEach',to,from)
+   	if(to.meta.title){ 
+   		document.title = to.meta.title //修改网页的title
+   	}else{
+   		document.title = 'vue_test'
+   	}
+   })
+   ```
+
+4. 独享守卫:
+
+   ```js
+   beforeEnter(to,from,next){
+   	console.log('beforeEnter',to,from)
+   	if(to.meta.isAuth){ //判断当前路由是否需要进行权限控制
+   		if(localStorage.getItem('school') === 'atguigu'){
+   			next()
+   		}else{
+   			alert('暂无权限查看')
+   			// next({name:'guanyu'})
+   		}
+   	}else{
+   		next()
+   	}
+   }
+   ```
+
+5. 组件内守卫：
+
+   ```js
+   //进入守卫：通过路由规则，进入该组件时被调用
+   beforeRouteEnter (to, from, next) {
+   },
+   //离开守卫：通过路由规则，离开该组件时被调用
+   beforeRouteLeave (to, from, next) {
+   }
+   ```
+
+
+
+
+## 6.13. 路由器的两种工作模式
+
+
+
+1. 对于一个url来说，什么是hash值？—— #及其后面的内容就是hash值。
+2. hash值不会包含在 HTTP 请求中，即：hash值不会带给服务器。
+3. hash模式：
+   1. 地址中永远带着#号，不美观 。
+   2. 若以后将地址通过第三方手机app分享，若app校验严格，则地址会被标记为不合法。
+   3. 兼容性较好。
+4. history模式：
+   1. 地址干净，美观 。
+   2. 兼容性和hash模式相比略差。
+   3. 应用部署上线时需要后端人员支持，解决刷新页面服务端404的问题。
+
+
+
+# **第 7 章：Vue UI 组件库**
+
+## **7.1. 移动端常用 UI 组件库**
+
+1. Vant https://youzan.github.io/vant
+2. Cube UI https://didi.github.io/cube-ui
+3. Mint UI http://mint-ui.github.io
+
+## **7.2. PC 端常用 UI 组件库**
+
+1. Element UI https://element.eleme.cn
+2. IView UI https://www.iviewui.com
+
+
+
+# 第8章：Vue3
+
+## 8.1. Vue3简介
+
+- 2020年9月18日，Vue.js发布3.0版本，代号：One Piece（海贼王）
+- 耗时2年多、[2600+次提交](https://github.com/vuejs/vue-next/graphs/commit-activity)、[30+个RFC](https://github.com/vuejs/rfcs/tree/master/active-rfcs)、[600+次PR](https://github.com/vuejs/vue-next/pulls?q=is%3Apr+is%3Amerged+-author%3Aapp%2Fdependabot-preview+)、[99位贡献者](https://github.com/vuejs/vue-next/graphs/contributors) 
+- github上的tags地址：https://github.com/vuejs/vue-next/releases/tag/v3.0.0
+
+## 8.2. Vue3带来了什么
+
+### 1.性能的提升
+
+- 打包大小减少41%
+
+- 初次渲染快55%, 更新渲染快133%
+
+- 内存减少54%
+
+  ......
+
+### 2.源码的升级
+
+- 使用Proxy代替defineProperty实现响应式
+
+- 重写虚拟DOM的实现和Tree-Shaking
+
+  ......
+
+### 3.拥抱TypeScript
+
+- Vue3可以更好的支持TypeScript
+
+### 4.新的特性
+
+1. Composition API（组合API）
+
+   - setup配置
+   - ref与reactive
+   - watch与watchEffect
+   - provide与inject
+   - ......
+2. 新的内置组件
+   - Fragment 
+   - Teleport
+   - Suspense
+3. 其他改变
+
+   - 新的生命周期钩子
+   - data 选项应始终被声明为一个函数
+   - 移除keyCode支持作为 v-on 的修饰符
+   - ......
+
+# 第9章：创建Vue3.0工程
+
+## 9.1. 使用 vue-cli 创建
+
+官方文档：https://cli.vuejs.org/zh/guide/creating-a-project.html#vue-create
+
+```bash
+## 查看@vue/cli版本，确保@vue/cli版本在4.5.0以上
+vue --version
+## 安装或者升级你的@vue/cli
+npm install -g @vue/cli
+## 创建
+vue create vue_test
+## 启动
+cd vue_test
+npm run serve
+```
+
+## 9.2. 使用 vite 创建
+
+官方文档：https://v3.cn.vuejs.org/guide/installation.html#vite
+
+vite官网：https://vitejs.cn
+
+- 什么是vite？—— 新一代前端构建工具。
+- 优势如下：
+  - 开发环境中，无需打包操作，可快速的冷启动。
+  - 轻量快速的热重载（HMR）。
+  - 真正的按需编译，不再等待整个应用编译完成。
+- 传统构建 与 vite构建对比图
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202310072258670.png" style="width:370px;height:250px;float:left;" /><img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202310072258210.png" style="width:370px;height:250px;" />
+
+```bash
+## 创建工程
+npm init vite-app <project-name>
+## 进入工程目录
+cd <project-name>
+## 安装依赖
+npm install
+## 运行
+npm run dev
+```
+
