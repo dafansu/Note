@@ -3849,3 +3849,206 @@ npm install
 npm run dev
 ```
 
+
+
+# 第10章：常用 Composition API
+
+官方文档: https://v3.cn.vuejs.org/guide/composition-api-introduction.html
+
+## 10.1. setup配置
+
+1. 理解：Vue3.0中一个新的配置项，值为一个函数。
+2. setup是所有<strong style="color:#DD5145">Composition API（组合API）</strong><i style="color:gray;font-weight:bold">“ 表演的舞台 ”</i>。
+3. 组件中所用到的：数据、方法等等，均要配置在setup中。
+4. setup函数的两种返回值：
+   1. 若返回一个对象，则对象中的属性、方法, 在模板中均可以直接使用。（重点关注！）
+   2. <span style="color:#aad">若返回一个渲染函数：则可以自定义渲染内容。（了解）</span>
+5. 注意点：
+   1. 尽量不要与Vue2.x配置混用
+      - Vue2.x配置（data、methos、computed...）中<strong style="color:#DD5145">可以访问到</strong>setup中的属性、方法。
+      - 但在setup中<strong style="color:#DD5145">不能访问到</strong>Vue2.x配置（data、methos、computed...）。
+      - <strong style="color:#DD5145">如果有重名, setup优先</strong>。
+   2. setup不能是一个async函数，因为返回值不再是return的对象, 而是promise, 模板看不到return对象中的属性。（后期也可以返回一个Promise实例，但需要Suspense和异步组件的配合）
+
+```vue
+<template>
+  <h1>一个人的信息</h1>
+  <h2>姓名：{{name}}</h2>
+  <h2>年龄：{{age}}</h2>
+  <h2>a的值为：{{a}}</h2>
+  <button @click="sayHello">vue3(sayHello)</button>
+  <br>
+  <button @click="sayWelcome">vue2(sayWelcome)</button>
+  <br>
+  <button @click="test1">vue2配置中读取vue3中的数据、方法</button>
+  <br>
+  <button @click="test2">vue3的setup配置中读取vue2中的数据、方法</button>
+</template>
+
+<script>
+// import {h} from 'vue'
+export default {
+  name: 'App',
+  data(){
+    return {
+      sex:'男',
+      a:100
+    }
+  },
+  methods:{
+    sayWelcome(){
+      alert("欢迎学习Vue")
+    },
+    test1(){
+      console.log(this.sex);
+      console.log(this.name);
+      console.log(this.age);
+      console.log(this.sayHello);
+    }
+  },
+  setup(){
+    //数据
+    let name = '张三'
+    let age = 18
+    let a = 900
+    
+	//方法
+    function sayHello(){
+      alert(`我叫${name}，我${age}岁了，你好啊`)
+    }
+    function test2(){
+      console.log(name);
+      console.log(age);
+      console.log(sayHello);
+      console.log(this.sex);
+      console.log(this.sayHello);
+    }
+
+    // 返回一个对象（常用）
+    return{
+      name,
+      age,
+      a,
+      sayHello,
+      test2
+    }
+
+    // 返回一个渲染函数
+    // return ()=>h('h1',"尚硅谷")
+  }
+}
+</script>
+```
+
+
+
+## 10.2. ref函数
+
+- 作用: 定义一个响应式的数据
+- 语法: ```const xxx = ref(initValue)``` 
+  - 创建一个包含响应式数据的<strong style="color:#DD5145">引用对象（reference对象，简称ref对象）</strong>。
+  - JS中操作数据： ```xxx.value```
+  - 模板中读取数据: 不需要.value，直接：```<div>{{xxx}}</div>```
+- 备注：
+  - 接收的数据可以是：基本类型、也可以是对象类型。
+  - 基本类型的数据：响应式依然是靠``Object.defineProperty()``的```get```与```set```完成的。
+  - 对象类型的数据：内部 <i style="color:gray;font-weight:bold">“ 求助 ”</i> 了Vue3.0中的一个新函数—— ```reactive```函数。
+
+```vue
+<template>
+  <h1>一个人的信息</h1>
+  <h2>姓名：{{name}}</h2>
+  <h2>年龄：{{age}}</h2>
+  <h2>工作总类：{{job.type}}</h2>
+  <h2>薪水：{{job.salary}}</h2>
+  <button @click="changeInfo">修改人的信息</button>
+</template>
+
+<script>
+import {ref} from 'vue'
+export default {
+  name: 'App',
+  setup(){
+    //数据
+    let name = ref('张三')
+    let age = ref(18)
+    let job = ref({
+      type: "前端工程师",
+      salary:"60k"
+    })
+    //方法
+    function changeInfo(){
+      name.value = "李四",
+      age.value = 10,
+      job.value.type = "后端工程师"
+      job.value.salary = "100k"
+    }
+    return{
+      name,
+      age,
+      job,
+      changeInfo
+    }
+  }
+}
+</script>
+
+```
+
+## 10.3. reactive函数
+
+- 作用: 定义一个<strong style="color:#DD5145">对象类型</strong>的响应式数据（基本类型不要用它，要用```ref```函数）
+- 语法：```const 代理对象= reactive(源对象)```接收一个对象（或数组），返回一个<strong style="color:#DD5145">代理对象（Proxy的实例对象，简称proxy对象）</strong>
+- reactive定义的响应式数据是“深层次的”。
+- 内部基于 ES6 的 Proxy 实现，通过代理对象操作源对象内部数据进行操作。
+
+```vue
+<template>
+  <h1>一个人的信息</h1>
+  <h2>姓名：{{person.name}}</h2>
+  <h2>年龄：{{person.age}}</h2>
+  <h2>工作总类：{{person.job.type}}</h2>
+  <h2>薪水：{{person.job.salary}}</h2>
+  <h2>爱好：{{person.hobby}}</h2>
+  <h2>测试数据c：{{person.job.a.b.c}}</h2>
+  <button @click="changeInfo">修改人的信息</button>
+</template>
+
+<script>
+import {reactive} from 'vue'
+export default {
+  name: 'App',
+  setup(){
+    //数据
+    let person = reactive({
+      name:'张三',
+      age:18,
+      job:{
+        type:'前端工程师',
+        salary:'60k',
+        a:{
+          b:{
+            c:666
+          }
+        }
+      },
+      hobby:["学习",'游戏']
+    })
+    //方法
+    function changeInfo(){
+      person.name = "李四",
+      person.age = 10,
+      person.job.type = "后端工程师"
+      person.job.salary = "100k"
+      person.job.a.b.c = 999
+      person.hobby[0] = '听歌'
+    }
+    return{
+      person,
+      changeInfo
+    }
+  }
+}
+</script>
+```
+
