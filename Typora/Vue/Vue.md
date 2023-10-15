@@ -4052,3 +4052,305 @@ export default {
 </script>
 ```
 
+## 10.4. Vue3.0中的响应式原理
+
+### vue2.x的响应式
+
+- 实现原理：
+
+  - 对象类型：通过```Object.defineProperty()```对属性的读取、修改进行拦截（数据劫持）。
+
+  - 数组类型：通过重写更新数组的一系列方法来实现拦截。（对数组的变更方法进行了包裹）。
+
+    ```js
+    Object.defineProperty(data, 'count', {
+        get () {}, 
+        set () {}
+    })
+    ```
+
+- 存在问题：
+
+  - 新增属性、删除属性, 界面不会更新。
+  - 直接通过下标修改数组, 界面不会自动更新。
+
+### Vue3.0的响应式
+
+- 实现原理: 
+
+  - 通过Proxy（代理）:  拦截对象中任意属性的变化, 包括：属性值的读写、属性的添加、属性的删除等。
+
+  - 通过Reflect（反射）:  对源对象的属性进行操作。
+
+  - MDN文档中描述的Proxy与Reflect：
+
+    - Proxy：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy
+
+    - Reflect：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect
+
+      ```js
+      new Proxy(data, {
+      	// 拦截读取属性值
+          get (target, prop) {
+          	return Reflect.get(target, prop)
+          },
+          // 拦截设置属性值或添加新属性
+          set (target, prop, value) {
+          	return Reflect.set(target, prop, value)
+          },
+          // 拦截删除属性
+          deleteProperty (target, prop) {
+          	return Reflect.deleteProperty(target, prop)
+          }
+      })
+      
+      proxy.name = 'tom'   
+      ```
+
+## 10.5. reactive对比ref
+
+-  从定义数据角度对比：
+   -  ref用来定义：<strong style="color:#DD5145">基本类型数据</strong>。
+   -  reactive用来定义：<strong style="color:#DD5145">对象（或数组）类型数据</strong>。
+   -  备注：ref也可以用来定义<strong style="color:#DD5145">对象（或数组）类型数据</strong>, 它内部会自动通过```reactive```转为<strong style="color:#DD5145">代理对象</strong>。
+-  从原理角度对比：
+   -  ref通过``Object.defineProperty()``的```get```与```set```来实现响应式（数据劫持）。
+   -  reactive通过使用<strong style="color:#DD5145">Proxy</strong>来实现响应式（数据劫持）, 并通过<strong style="color:#DD5145">Reflect</strong>操作<strong style="color:orange">源对象</strong>内部的数据。
+-  从使用角度对比：
+   -  ref定义的数据：操作数据<strong style="color:#DD5145">需要</strong>```.value```，读取数据时模板中直接读取<strong style="color:#DD5145">不需要</strong>```.value```。
+   -  reactive定义的数据：操作数据与读取数据：<strong style="color:#DD5145">均不需要</strong>```.value```。
+
+
+
+## 10.6. setup的两个注意点
+
+- setup执行的时机
+  - 在**beforeCreate之前**执行一次，this是**undefined**。
+- setup的参数
+  - **props**：值为对象，包含：组件外部传递过来，且组件内部声明接收了的属性。
+  - **context**：上下文对象
+    - **attrs**: 值为对象，包含：组件外部传递过来，但没有在props配置中声明的属性, 相当于 ```this.$attrs```。
+    - **slots**: 收到的插槽内容, 相当于 ```this.$slots```。
+    - emit: 分发自定义事件的函数, 相当于 ```this.$emit```。
+
+
+
+## 10.7. 计算属性---computed函数
+
+- 与Vue2.x中computed配置功能一致
+
+- 写法
+
+  ```js
+  import {computed} from 'vue'
+  
+  setup(){
+      ...
+  	//计算属性——简写
+      let fullName = computed(()=>{
+          return person.firstName + '-' + person.lastName
+      })
+      //计算属性——完整
+      let fullName = computed({
+          get(){
+              return person.firstName + '-' + person.lastName
+          },
+          set(value){
+              const nameArr = value.split('-')
+              person.firstName = nameArr[0]
+              person.lastName = nameArr[1]
+          }
+      })
+  }
+  ```
+
+  
+
+## 10.8. 监视
+
+### watch函数
+
+- 与Vue2.x中watch配置功能一致
+
+- 两个小“坑”：
+
+  - 监视reactive定义的响应式数据时：oldValue无法正确获取、强制开启了深度监视（deep配置失效）。
+  - 监视reactive定义的响应式数据中某个属性时：deep配置有效。
+
+  ```js
+  //情况一：监视ref定义的响应式数据
+  watch(sum,(newValue,oldValue)=>{
+  	console.log('sum变化了',newValue,oldValue)
+  },{immediate:true})
+  
+  //情况二：监视多个ref定义的响应式数据
+  watch([sum,msg],(newValue,oldValue)=>{
+  	console.log('sum或msg变化了',newValue,oldValue)
+  }) 
+  
+  /* 情况三：监视reactive定义的响应式数据
+  			若watch监视的是reactive定义的响应式数据，则无法正确获得oldValue！！
+  			若watch监视的是reactive定义的响应式数据，则强制开启了深度监视 
+  */
+  watch(person,(newValue,oldValue)=>{
+  	console.log('person变化了',newValue,oldValue)
+  },{immediate:true,deep:false}) //此处的deep配置不再奏效
+  
+  //情况四：监视reactive定义的响应式数据中的某个属性
+  watch(()=>person.job,(newValue,oldValue)=>{
+  	console.log('person的job变化了',newValue,oldValue)
+  },{immediate:true,deep:true}) 
+  
+  //情况五：监视reactive定义的响应式数据中的某些属性
+  watch([()=>person.job,()=>person.name],(newValue,oldValue)=>{
+  	console.log('person的job变化了',newValue,oldValue)
+  },{immediate:true,deep:true})
+  watch(()=>[person.name,person.age],(newValue,oldValue)=>{
+      console.log('person的name或age变化了',newValue,oldValue)
+  }) 
+  //特殊情况
+  watch(()=>person.job,(newValue,oldValue)=>{
+      console.log('person的job变化了',newValue,oldValue)
+  },{deep:true}) //此处由于监视的是reactive素定义的对象中的某个属性，所以deep配置有效
+  ```
+
+  
+
+### watchEffect函数
+
+- watch的套路是：既要指明监视的属性，也要指明监视的回调。
+
+- watchEffect的套路是：不用指明监视哪个属性，监视的回调中用到哪个属性，那就监视哪个属性。
+
+- watchEffect有点像computed：
+
+  - 但computed注重的计算出来的值（回调函数的返回值），所以必须要写返回值。
+  - 而watchEffect更注重的是过程（回调函数的函数体），所以不用写返回值。
+
+  ```js
+  //watchEffect所指定的回调中用到的数据只要发生变化，则直接重新执行回调。
+  watchEffect(()=>{
+      const x1 = sum.value
+      const x2 = person.age
+      console.log('watchEffect配置的回调执行了')
+  })
+  ```
+
+  
+
+## 10.9.Vue3的生命周期
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202310151844159.png"/>
+
+- Vue3.0中可以继续使用Vue2.x中的生命周期钩子，但有有两个被更名：
+  - ```beforeDestroy```改名为 ```beforeUnmount```
+  - ```destroyed```改名为 ```unmounted```
+- Vue3.0也提供了 Composition API 形式的生命周期钩子，与Vue2.x中钩子对应关系如下：
+  - `beforeCreate`===>`setup()`
+  - `created`=======>`setup()`
+  - `beforeMount` ===>`onBeforeMount`
+  - `mounted`=======>`onMounted`
+  - `beforeUpdate`===>`onBeforeUpdate`
+  - `updated` =======>`onUpdated`
+  - `beforeUnmount` ==>`onBeforeUnmount`
+  - `unmounted` =====>`onUnmounted`
+
+```js
+import {ref,onBeforeMount,onMounted,onBeforeUpdate,onUpdated,onBeforeUnmount,onUnmounted} from 'vue'
+export default {
+    name: 'VueDemo',
+
+    setup(){
+        console.log('---setup---')
+        //数据
+        let sum = ref(0)
+
+        //通过组合式API的形式去使用生命周期钩子
+        onBeforeMount(()=>{
+            console.log('---onBeforeMount---')
+        })
+        onMounted(()=>{
+            console.log('---onMounted---')
+        })
+        onBeforeUpdate(()=>{
+            console.log('---onBeforeUpdate---')
+        })
+        onUpdated(()=>{
+            console.log('---onUpdated---')
+        })
+        onBeforeUnmount(()=>{
+            console.log('---onBeforeUnmount---')
+        })
+        onUnmounted(()=>{
+            console.log('---onUnmounted---')
+        })
+
+        //返回一个对象（常用）
+        return {sum}
+    },
+}
+```
+
+
+
+## 10.10. 自定义hook函数
+
+- 什么是hook？—— 本质是一个函数，把setup函数中使用的**Composition API进行了封装**。
+
+- 类似于vue2.x中的mixin。
+
+- 自定义hook的优势: **复用代码**, 让setup中的逻辑更清楚易懂。
+
+<img src="https://raw.githubusercontent.com/dafansu/Note/main/Typora/Vue/img/202310151846775.png"/>
+
+```js
+import {reactive,onMounted,onBeforeUnmount} from 'vue'
+export default function (){
+	//实现鼠标“打点”相关的数据
+	let point = reactive({
+		x:0,
+		y:0
+	})
+	//实现鼠标“打点”相关的方法
+	function savePoint(event){
+		point.x = event.pageX
+		point.y = event.pageY
+		console.log(event.pageX,event.pageY)
+	}
+	//实现鼠标“打点”相关的生命周期钩子
+	onMounted(()=>{
+		window.addEventListener('click',savePoint)
+	})
+
+	onBeforeUnmount(()=>{
+		window.removeEventListener('click',savePoint)
+	})
+	return point
+}
+```
+
+```vue
+<template>
+	<h2>当前求和为：{{sum}}</h2>
+	<button @click="sum++">点我+1</button>
+	<hr>
+	<h2>当前点击时鼠标的坐标为：x：{{point.x}}，y：{{point.y}}</h2>
+</template>
+
+<script>
+	import {ref} from 'vue'
+	import usePoint from '../hooks/usePoint'
+	export default {
+		name: 'VueDemo',
+		setup(){
+			//数据
+			let sum = ref(0)
+			let point = usePoint()
+			
+			//返回一个对象（常用）
+			return {sum,point}
+		}
+	}
+</script>
+```
+
